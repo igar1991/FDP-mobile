@@ -8,13 +8,13 @@ import { SignUpScreen } from "./screens/SignUpScreen";
 import { MainScreen } from "./screens/MainScreen";
 import { FavoriteScreen } from "./screens/FavoriteScreen";
 import { CreateWalletScreen } from "./screens/CreateWalletScreen";
-import { View, Text, Button } from 'react-native';
-import { Entypo } from '@expo/vector-icons'; 
+import { TouchableOpacity } from "react-native";
+import { Entypo } from "@expo/vector-icons";
 
 const Stack = createNativeStackNavigator();
 
 export function AppWrapper({ navigation }) {
-  const { userWallet, isAuth } = useContext(AuthContext);
+  const { isAuth, signOut } = useContext(AuthContext);
 
   useEffect(() => {
     // Fetch the token from storage then navigate to our appropriate place
@@ -58,11 +58,9 @@ export function AppWrapper({ navigation }) {
               component={HomeScreen}
               options={{
                 headerRight: () => (
-                  <Button
-                    onPress={() => alert("This is a button!")}
-                    title="Info"
-                    color="#fff"
-                  />
+                  <TouchableOpacity onPress={() => signOut()}>
+                    <Entypo name="log-out" size={24} color="red" />
+                  </TouchableOpacity>
                 ),
               }}
             />
