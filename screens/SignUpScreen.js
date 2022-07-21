@@ -1,7 +1,7 @@
 import React, { useContext, useState } from "react";
 import { View, TextInput, Button, StyleSheet, Image, Text, TouchableOpacity } from "react-native";
 import * as Clipboard from 'expo-clipboard';
-import { AuthContext } from "../context/context";
+import { AuthContext } from "../context/auth/context";
 import { AntDesign } from '@expo/vector-icons'; 
 
 export function SignUpScreen() {

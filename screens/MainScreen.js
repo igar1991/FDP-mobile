@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { } from "react";
 import { View, StyleSheet, Button, Image } from "react-native";
 
 export function MainScreen({ navigation }) {

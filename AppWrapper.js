@@ -3,11 +3,9 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { SignInScreen } from "./screens/SignInScreen";
 import { HomeScreen } from "./screens/HomeScreen";
-import { AuthContext } from "./context/context";
+import { AuthContext } from "./context/auth/context";
 import { SignUpScreen } from "./screens/SignUpScreen";
 import { MainScreen } from "./screens/MainScreen";
-import { FavoriteScreen } from "./screens/FavoriteScreen";
-import { CreateWalletScreen } from "./screens/CreateWalletScreen";
 import { TouchableOpacity } from "react-native";
 import { Entypo } from "@expo/vector-icons";
 
@@ -44,7 +42,6 @@ export function AppWrapper({ navigation }) {
           <>
             <Stack.Screen name="Sign In" component={SignInScreen} />
             <Stack.Screen name="Sign Up" component={SignUpScreen} />
-            <Stack.Screen name="Create Wallet" component={CreateWalletScreen} />
             <Stack.Screen
               name="Main"
               component={MainScreen}
@@ -64,7 +61,6 @@ export function AppWrapper({ navigation }) {
                 ),
               }}
             />
-            <Stack.Screen name="Favorite" component={FavoriteScreen} />
           </>
         )}
       </Stack.Navigator>

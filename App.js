@@ -1,5 +1,5 @@
 import React from 'react';
-import { AuthState } from './context/AuthState';
+import { AuthState } from './context/auth/AuthState';
 import { AppWrapper } from './AppWrapper';
 
 
