@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { View, StyleSheet, Button, Image } from "react-native";
 
 export function MainScreen({ navigation }) {
@@ -14,12 +14,12 @@ export function MainScreen({ navigation }) {
         <Button
           color="#20B954"
           title="Sign in"
-          onPress={() => navigation.navigate("SignIn")}
+          onPress={() => navigation.navigate("Sign In")}
         />
         <Button
           color="#FF9A22"
           title="Sign up"
-          onPress={() => navigation.navigate("SignUp")}
+          onPress={() => navigation.navigate("Sign Up")}
         />
       </View>
     </View>

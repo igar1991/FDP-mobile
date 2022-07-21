@@ -10,6 +10,7 @@ import { AuthContext } from "./context/context";
 import { SignUpScreen } from "./screens/SignUpScreen";
 import { MainScreen } from "./screens/MainScreen";
 import { FavoriteScreen } from "./screens/FavoriteScreen";
+import { CreateWalletScreen } from "./screens/CreateWalletScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -42,8 +43,9 @@ export function AppWrapper({ navigation }) {
       <Stack.Navigator initialRouteName="Main">
         {userToken == null ? (
           <>
-            <Stack.Screen name="SignIn" component={SignInScreen} />
-            <Stack.Screen name="SignUp" component={SignUpScreen} />
+            <Stack.Screen name="Sign In" component={SignInScreen} />
+            <Stack.Screen name="Sign Up" component={SignUpScreen} />
+            <Stack.Screen name="Create Wallet" component={CreateWalletScreen} />
             <Stack.Screen name="Main" component={MainScreen} options={{headerShown: false}} />
           </>
         ) : (
