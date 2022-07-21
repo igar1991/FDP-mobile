@@ -1,12 +1,18 @@
-import React, { useContext } from "react";
-import { View, TextInput, Button, StyleSheet, Image } from "react-native";
+import React, { useContext, useState } from "react";
+import { View, TextInput, Button, StyleSheet, Image, Text, TouchableOpacity } from "react-native";
+import * as Clipboard from 'expo-clipboard';
 import { AuthContext } from "../context/context";
+import { AntDesign } from '@expo/vector-icons'; 
 
 export function SignUpScreen() {
-  const [username, setUsername] = React.useState("");
-  const [password, setPassword] = React.useState("");
-  const { signUp, userToken } = useContext(AuthContext);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const { signUp, userWallet, userBalance, createWallet, getBalance } = useContext(AuthContext);
 
+  const copyToClipboard = async () => {
+    await Clipboard.setStringAsync(userWallet);
+    };
+    console.log(userWallet, userBalance)
   return (
     <View style={styles.container}>
       <View style={styles.containerLogo}>
@@ -15,15 +21,36 @@ export function SignUpScreen() {
           source={require("../assets/logoMain.png")}
         />
       </View>
-      {userToken === null ? (
-        <View style={styles.containerButtons}>
+      {userWallet === null && (
+        <View style={styles.containerText}>
+          <Text style={styles.text}>
+            To create an account, you need to create a wallet and top up it with
+            0.1 xDai.
+          </Text>
           <Button
             color="#FF9A22"
-            title="Sign un"
-            onPress={() => signUp({ username, password })}
+            title="Create Wallet"
+            onPress={() => createWallet()}
           />
         </View>
-      ) : (
+      )}
+            {userWallet && userBalance < 0.1 && (
+        <View style={styles.containerText}>
+          <Text style={styles.text}>
+            To create an account, you need top up wallet with
+            0.1 xDai.
+          </Text>
+          <TouchableOpacity onPress={() => copyToClipboard()}>
+          <Text style={styles.text}>{userWallet}<AntDesign name="copy1" size={16} color="black" /></Text>
+          </TouchableOpacity>
+          <Button
+            color="#20B954"
+            title="Update balanse"
+            onPress={() => getBalance()}
+          />
+        </View>
+      )}
+      {userWallet && userBalance >= 0.1 && (
         <>
           <View style={styles.containerInput}>
             <TextInput
@@ -43,7 +70,7 @@ export function SignUpScreen() {
           <View style={styles.containerButtons}>
             <Button
               color="#FF9A22"
-              title="Sign un"
+              title="Sign up"
               onPress={() => signUp({ username, password })}
             />
           </View>
@@ -62,8 +89,15 @@ const styles = StyleSheet.create({
     flex: 0.4,
     justifyContent: "center",
   },
+  text: {
+    textAlign: "center",
+  },
   containerButtons: {
     flex: 0.2,
+  },
+  containerText: {
+    flex: 0.4,
+    justifyContent: "space-around",
   },
   input: {
     height: 40,

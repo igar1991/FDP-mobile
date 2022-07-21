@@ -1,7 +1,4 @@
-import React, {
-  useEffect,
-  useContext,
-} from "react";
+import React, { useEffect, useContext } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { SignInScreen } from "./screens/SignInScreen";
@@ -11,19 +8,21 @@ import { SignUpScreen } from "./screens/SignUpScreen";
 import { MainScreen } from "./screens/MainScreen";
 import { FavoriteScreen } from "./screens/FavoriteScreen";
 import { CreateWalletScreen } from "./screens/CreateWalletScreen";
+import { View, Text, Button } from 'react-native';
+import { Entypo } from '@expo/vector-icons'; 
 
 const Stack = createNativeStackNavigator();
 
 export function AppWrapper({ navigation }) {
-  const { userToken } = useContext(AuthContext);
+  const { userWallet, isAuth } = useContext(AuthContext);
 
   useEffect(() => {
     // Fetch the token from storage then navigate to our appropriate place
     const bootstrapAsync = async () => {
-      let userToken;
+      let userWallet;
 
       try {
-        userToken = await SecureStore.getItemAsync("userToken");
+        userWallet = await SecureStore.getItemAsync("userWallet");
       } catch (e) {
         // Restoring token failed
       }
@@ -41,17 +40,33 @@ export function AppWrapper({ navigation }) {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Main">
-        {userToken == null ? (
+        {!isAuth ? (
           <>
             <Stack.Screen name="Sign In" component={SignInScreen} />
             <Stack.Screen name="Sign Up" component={SignUpScreen} />
             <Stack.Screen name="Create Wallet" component={CreateWalletScreen} />
-            <Stack.Screen name="Main" component={MainScreen} options={{headerShown: false}} />
+            <Stack.Screen
+              name="Main"
+              component={MainScreen}
+              options={{ headerShown: false }}
+            />
           </>
         ) : (
           <>
-          <Stack.Screen name="Home" component={HomeScreen} />
-          <Stack.Screen name="Favorite" component={FavoriteScreen} />
+            <Stack.Screen
+              name="Home"
+              component={HomeScreen}
+              options={{
+                headerRight: () => (
+                  <Button
+                    onPress={() => alert("This is a button!")}
+                    title="Info"
+                    color="#fff"
+                  />
+                ),
+              }}
+            />
+            <Stack.Screen name="Favorite" component={FavoriteScreen} />
           </>
         )}
       </Stack.Navigator>
