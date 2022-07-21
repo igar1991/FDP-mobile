@@ -44,7 +44,7 @@ export function AppWrapper({ navigation }) {
           <>
             <Stack.Screen name="SignIn" component={SignInScreen} />
             <Stack.Screen name="SignUp" component={SignUpScreen} />
-            <Stack.Screen name="Main" component={MainScreen} />
+            <Stack.Screen name="Main" component={MainScreen} options={{headerShown: false}} />
           </>
         ) : (
           <>
