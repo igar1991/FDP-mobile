@@ -1,12 +1,14 @@
-import React from 'react';
-import { AuthState } from './context/auth/AuthState';
-import { AppWrapper } from './AppWrapper';
-
+import React from "react";
+import { AuthState } from "./context/auth/AuthState";
+import { AppWrapper } from "./AppWrapper";
+import { PodsState } from "./context/pods/PodsState";
 
 export default function App() {
- return (
+  return (
     <AuthState>
-      <AppWrapper />
+      <PodsState>
+        <AppWrapper />
+      </PodsState>
     </AuthState>
   );
 }

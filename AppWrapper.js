@@ -8,6 +8,7 @@ import { SignUpScreen } from "./screens/SignUpScreen";
 import { MainScreen } from "./screens/MainScreen";
 import { TouchableOpacity } from "react-native";
 import { Entypo } from "@expo/vector-icons";
+import { CurrentDirectoryScreen } from "./screens/currentDirectoryScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -59,6 +60,19 @@ export function AppWrapper({ navigation }) {
                     <Entypo name="log-out" size={24} color="red" />
                   </TouchableOpacity>
                 ),
+                title: "Pods"
+              }}
+            />
+            <Stack.Screen
+              name="Directory"
+              component={CurrentDirectoryScreen}
+              options={{
+                headerRight: () => (
+                  <TouchableOpacity onPress={() => signOut()}>
+                    <Entypo name="log-out" size={24} color="red" />
+                  </TouchableOpacity>
+                ),
+                title: "Pod"
               }}
             />
           </>
