@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -10,13 +10,20 @@ import {
 import { RenderPods } from "../components/renderPods";
 import { PodsContext } from "../context/pods/context";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { CircleButton } from "../components/circleButton";
+import { ModalWrapper } from "../components/modalWrapper";
 
 export function HomeScreen({ navigation }) {
   const { getListPods, podsList } = useContext(PodsContext);
+  const [modalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
     getListPods();
   }, []);
+
+  const buttonClickedHandler = (ismodal)=>{
+    setModalVisible(ismodal)
+  }
 
   return (
     <>
@@ -25,7 +32,7 @@ export function HomeScreen({ navigation }) {
           <FlatList
             data={podsList}
             renderItem={({ item }) => (
-              <RenderPods navigation={navigation} item={item} />
+              <RenderPods navigation={navigation} item={item} buttonClickedHandler={buttonClickedHandler} />
             )}
             keyExtractor={(item) => item.id}
           />
@@ -46,6 +53,8 @@ export function HomeScreen({ navigation }) {
           </Text>
         </View>
       )}
+      <CircleButton buttonClickedHandler={buttonClickedHandler}/>
+      <ModalWrapper modalVisible={modalVisible} buttonClickedHandler={buttonClickedHandler} />
     </>
   );
 }

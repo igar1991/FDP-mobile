@@ -28,7 +28,7 @@ export const PodsState = (props) => {
           {
             id: "58694a0f-3da1-471f-bd96-145571e29d72",
             title: "Third Item",
-          },
+          }
         ];
         dispatch({ type: GET_LIST_PODS, data: pods });
       },

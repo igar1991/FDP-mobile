@@ -57,7 +57,7 @@ export function AppWrapper({ navigation }) {
               options={{
                 headerRight: () => (
                   <TouchableOpacity onPress={() => signOut()}>
-                    <Entypo name="log-out" size={24} color="red" />
+                    <Entypo name="log-out" size={24} color="#ad535f" />
                   </TouchableOpacity>
                 ),
                 title: "Pods"
@@ -69,7 +69,7 @@ export function AppWrapper({ navigation }) {
               options={{
                 headerRight: () => (
                   <TouchableOpacity onPress={() => signOut()}>
-                    <Entypo name="log-out" size={24} color="red" />
+                    <Entypo name="log-out" size={24} color="#ad535f" />
                   </TouchableOpacity>
                 ),
                 title: "Pod"
