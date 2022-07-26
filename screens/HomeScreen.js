@@ -12,10 +12,12 @@ import { PodsContext } from "../context/pods/context";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { CircleButton } from "../components/circleButton";
 import { ModalWrapper } from "../components/modalWrapper";
+import { ModalLittleWrapper } from "../components/modalLittleWrapper";
 
 export function HomeScreen({ navigation }) {
   const { getListPods, podsList } = useContext(PodsContext);
   const [modalVisible, setModalVisible] = useState(false);
+  const [modaLittlelVisible, setModalLittleVisible] = useState(false);
 
   useEffect(() => {
     getListPods();
@@ -23,6 +25,10 @@ export function HomeScreen({ navigation }) {
 
   const buttonClickedHandler = (ismodal)=>{
     setModalVisible(ismodal)
+  }
+
+  const buttonClickedHandlerLittle = (ismodal)=>{
+    setModalLittleVisible(ismodal)
   }
 
   return (
@@ -53,8 +59,9 @@ export function HomeScreen({ navigation }) {
           </Text>
         </View>
       )}
-      <CircleButton buttonClickedHandler={buttonClickedHandler}/>
+      <CircleButton buttonClickedHandler={buttonClickedHandlerLittle}/>
       <ModalWrapper modalVisible={modalVisible} buttonClickedHandler={buttonClickedHandler} />
+      <ModalLittleWrapper modalVisible={modaLittlelVisible} buttonClickedHandler={buttonClickedHandlerLittle} />
     </>
   );
 }

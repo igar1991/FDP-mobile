@@ -84,9 +84,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
+    backgroundColor: "white"
   },
   containerInput: {
-    flex: 0.4,
+    flex: 0.3,
     justifyContent: "center",
   },
   text: {
@@ -113,7 +114,7 @@ const styles = StyleSheet.create({
     marginEnd: "auto",
   },
   containerLogo: {
-    flex: 0.3,
-    justifyContent: "flex-end",
+    flex: 0.4,
+    justifyContent: "center",
   },
 });

@@ -1,7 +1,6 @@
 import React, { useEffect, useContext } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { SignInScreen } from "./screens/SignInScreen";
 import { HomeScreen } from "./screens/HomeScreen";
 import { AuthContext } from "./context/auth/context";
 import { SignUpScreen } from "./screens/SignUpScreen";
@@ -41,8 +40,7 @@ export function AppWrapper({ navigation }) {
       <Stack.Navigator initialRouteName="Main">
         {!isAuth ? (
           <>
-            <Stack.Screen name="Sign In" component={SignInScreen} />
-            <Stack.Screen name="Sign Up" component={SignUpScreen} />
+            <Stack.Screen name="Sign Up" component={SignUpScreen} options={{ headerShown: false }} />
             <Stack.Screen
               name="Main"
               component={MainScreen}
