@@ -1,5 +1,6 @@
 import React, { useState, useContext } from "react";
 import { View, StyleSheet, Button, Image, TextInput } from "react-native";
+import { MainButton } from "../components/mainButton";
 import { AuthContext } from "../context/auth/context";
 
 export function MainScreen({ navigation }) {
@@ -32,16 +33,8 @@ export function MainScreen({ navigation }) {
         />
       </View>
       <View style={styles.containerButtons}>
-        <Button
-          color="#20B954"
-          title="Sign in"
-          onPress={() => signIn({ username, password })}
-        />
-        <Button
-          color="#FF9A22"
-          title="Sign up"
-          onPress={() => navigation.navigate("Sign Up")}
-        />
+        <MainButton title="Sign In" backgroundColor={{backgroundColor:"#20B954"}} onPress={() => signIn({ username, password })}/>
+        <MainButton title="Sign Up" backgroundColor={{backgroundColor:"#FF9A22"}} onPress={() => navigation.navigate("Sign Up")}/>
       </View>
     </View>
   );
@@ -64,10 +57,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   containerButtons: {
-    flex: 0.2,
-    justifyContent: "space-around",
+    flex: 0.3,
+    justifyContent: "flex-start",
     backgroundColor: "#fff",
-    
   },
   containerInput: {
     flex: 0.3,

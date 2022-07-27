@@ -3,6 +3,7 @@ import { View, TextInput, Button, StyleSheet, Image, Text, TouchableOpacity } fr
 import * as Clipboard from 'expo-clipboard';
 import { AuthContext } from "../context/auth/context";
 import { AntDesign } from '@expo/vector-icons'; 
+import { MainButton } from "../components/mainButton";
 
 export function SignUpScreen() {
   const [username, setUsername] = useState("");
@@ -27,11 +28,7 @@ export function SignUpScreen() {
             To create an account, you need to create a wallet and top up it with
             0.1 xDai.
           </Text>
-          <Button
-            color="#FF9A22"
-            title="Create Wallet"
-            onPress={() => createWallet()}
-          />
+          <MainButton title="Create Wallet" backgroundColor={{backgroundColor:"#FF9A22"}} onPress={() => createWallet()}/>
         </View>
       )}
             {userWallet && userBalance < 0.1 && (
@@ -43,11 +40,7 @@ export function SignUpScreen() {
           <TouchableOpacity onPress={() => copyToClipboard()}>
           <Text style={styles.text}>{userWallet}<AntDesign name="copy1" size={16} color="black" /></Text>
           </TouchableOpacity>
-          <Button
-            color="#20B954"
-            title="Update balanse"
-            onPress={() => getBalance()}
-          />
+          <MainButton title="Update balance" backgroundColor={{backgroundColor:"#20B954"}} onPress={() => getBalance()}/>
         </View>
       )}
       {userWallet && userBalance >= 0.1 && (
@@ -68,11 +61,7 @@ export function SignUpScreen() {
             />
           </View>
           <View style={styles.containerButtons}>
-            <Button
-              color="#FF9A22"
-              title="Sign up"
-              onPress={() => signUp({ username, password })}
-            />
+            <MainButton title="Sign Up" backgroundColor={{backgroundColor:"#FF9A22"}} onPress={() => signUp({ username, password })}/>
           </View>
         </>
       )}

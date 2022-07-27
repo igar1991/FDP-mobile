@@ -5,19 +5,24 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 
 export const RenderPods = ({ item, navigation, buttonClickedHandler }) => {
-  const { inPod } = useContext(PodsContext);
+  const { inPod, choosePod } = useContext(PodsContext);
 
   const goToDirectory = () => {
     navigation.push("Directory");
-    inPod(item.title);
+    inPod(item);
   };
+
+  const openMenu =()=>{
+    choosePod(item);
+    buttonClickedHandler(true)
+  }
   return (
     <TouchableOpacity onPress={goToDirectory} style={styles.item} onLongPress={()=>buttonClickedHandler(true)}>
       <View style={styles.container}>
         <MaterialCommunityIcons name="harddisk" size={26} color="#6945f8" />
         <Text style={styles.title}>{item.title}</Text>
       </View>
-      <TouchableOpacity onPress={()=>buttonClickedHandler(true)}>
+      <TouchableOpacity onPress={openMenu}>
         <Entypo name="dots-three-vertical" size={24} color="gray" />
       </TouchableOpacity>
     </TouchableOpacity>

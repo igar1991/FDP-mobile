@@ -1,7 +1,7 @@
 import { useMemo, useReducer } from "react";
 import { PodsContext } from "./context";
 import { PodsReduser } from "./reducer";
-import { GET_LIST_FILES, GET_LIST_PODS, IN_POD } from "./actions";
+import { CHOOSE_POD, CREATE_POD, DELETE_POD, GET_LIST_FILES, GET_LIST_PODS, IN_POD } from "./actions";
 
 export const PodsState = (props) => {
   const initialState = {
@@ -32,7 +32,10 @@ export const PodsState = (props) => {
         ];
         dispatch({ type: GET_LIST_PODS, data: pods });
       },
-      inPod: async (name) => {
+      choosePod: (pod)=>{
+        dispatch({type: CHOOSE_POD, pod})
+      },
+      inPod: async (pod) => {
         // const list = await fdp.directory.read('my-new-pod', '/')
         const list = [
           {
@@ -48,7 +51,18 @@ export const PodsState = (props) => {
             title: "Third folder",
           },
         ];
-        dispatch({ type: IN_POD, data: list, pod: name });
+        dispatch({type: CHOOSE_POD, pod})
+        dispatch({ type: IN_POD, data: list });
+        
+      },
+      deletePod: async (pod)=>{
+        // const res = await fdp.personalStorage.delete('my-new-pod')
+        dispatch({type: DELETE_POD, pod})
+      },
+      createPod: async (name)=>{
+          // const pod = await fdp.personalStorage.create('my-new-pod')
+          const pod = {id: '111', title: name}
+          dispatch({type: CREATE_POD, pod})
       },
       getDerectoryList: async (activePod, directory) => {
         // const list = await fdp.directory.read('my-new-pod', directory)
@@ -66,7 +80,6 @@ export const PodsState = (props) => {
             title: "Third Item",
           },
         ];
-        console.log(directory)
         dispatch({ type: GET_LIST_FILES, data: list });
       },
     }),

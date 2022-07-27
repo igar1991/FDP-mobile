@@ -14,8 +14,8 @@ export const CircleButton = ({buttonClickedHandler}) => {
 
 const styles = StyleSheet.create({
   roundButton: {
-    width: 80,
-    height: 80,
+    width: 70,
+    height: 70,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 10,

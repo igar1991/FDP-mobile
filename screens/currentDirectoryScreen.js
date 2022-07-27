@@ -13,10 +13,10 @@ export const CurrentDirectoryScreen = ({ navigation }) => {
   const { currentListFiles, activePod, getDerectoryList } = useContext(PodsContext);
   useEffect(() => {
     navigation.setOptions({
-      title: activePod ?? "",
+      title: activePod ? activePod.title :  "",
     });
-    getDerectoryList(activePod, getDirectory())
-  }, []);
+    getDerectoryList(activePod?.title, getDirectory())
+  }, [activePod]);
 
   const getDirectory = () => {
     let root = [];

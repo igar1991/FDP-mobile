@@ -1,4 +1,4 @@
-import { Modal, Pressable, StyleSheet } from "react-native";
+import { Modal, Pressable, StyleSheet, Text } from "react-native";
 
 export const ModalLittleWrapper =({children, modalVisible, buttonClickedHandler })=>{
   return (
@@ -23,14 +23,15 @@ const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
     justifyContent: "center",
-    marginTop: 22,
     alignItems: "center",
+    marginTop: 22,
   },
   modalView: {
     margin: 0,
+    width: "70%",
     backgroundColor: "white",
     borderRadius: 15,
-    padding: 35,
+    padding: 10,
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
