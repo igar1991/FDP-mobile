@@ -2,19 +2,28 @@ import React from "react";
 import { Text, TouchableOpacity, StyleSheet, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
+import { Ionicons } from '@expo/vector-icons';
+import { FontAwesome } from '@expo/vector-icons';
 
 export const RenderDirectory = ({ item, navigation }) => {
+
   const goToDirectory = () => {
-    navigation.push("Directory", { dir: item.title });
+    if(item.type === "folder") {
+      navigation.push("Directory", { dir: item.title });
+    } else {
+      console.log("This is file")
+    }
+    
   };
+
   return (
     <TouchableOpacity onPress={goToDirectory} style={styles.item}>
       <View style={styles.container}>
-        <MaterialCommunityIcons name="harddisk" size={26} color="black" />
+        {item.type === "folder" ? <Entypo name="folder" size={24} color="#FF9A22" /> : <FontAwesome name="file" size={24} color="#6945f8" />}
         <Text style={styles.title}>{item.title}</Text>
       </View>
       <TouchableOpacity onPress={() => console.log(item.id)}>
-        <Entypo name="menu" size={26} color="gray" />
+        <Entypo name="dots-three-vertical" size={24} color="gray" />
       </TouchableOpacity>
     </TouchableOpacity>
   );
@@ -23,16 +32,19 @@ export const RenderDirectory = ({ item, navigation }) => {
 const styles = StyleSheet.create({
   item: {
     padding: 15,
-    marginVertical: 8,
-    marginHorizontal: 16,
+    marginHorizontal: 10,
+    marginVertical: 1,
     backgroundColor: "white",
-    borderRadius: 20,
+    borderRadius: 2,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    borderWidth: 1,
+    borderColor: "gray"
+
   },
   title: {
-    fontSize: 24,
+    fontSize: 20,
     marginLeft: 2,
   },
   container: {

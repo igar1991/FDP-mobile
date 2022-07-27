@@ -1,22 +1,38 @@
-import { Modal, Pressable, StyleSheet } from "react-native";
+import { Modal, Pressable, StyleSheet, View } from "react-native";
 
-export const ModalWrapper =({children, modalVisible, buttonClickedHandler })=>{
+export const ModalWrapper = ({
+  children,
+  modalVisible,
+  buttonClickedHandler,
+}) => {
   return (
     <Modal
-    animationType="slide"
-    transparent={true}
-    visible={modalVisible}
-    onRequestClose={() => {
-      buttonClickedHandler(false)
-    }}
-  >
-    <Pressable  style={styles.centeredView} onPress={() => buttonClickedHandler(false)}>
-      <Pressable style={styles.modalView}>
-          {children}
+      animationType="slide"
+      transparent={true}
+      visible={modalVisible}
+      onRequestClose={() => {
+        buttonClickedHandler(false);
+      }}
+    >
+      <Pressable
+        style={styles.centeredView}
+        onPress={() => buttonClickedHandler(false)}
+      >
+        <Pressable style={styles.modalView}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "flex-end",
+              justifyContent: "space-around",
+              width: "100%",
+            }}
+          >
+            {children}
+          </View>
+        </Pressable>
       </Pressable>
-    </Pressable >
-  </Modal>
-  )
+    </Modal>
+  );
 };
 
 const styles = StyleSheet.create({
@@ -35,10 +51,10 @@ const styles = StyleSheet.create({
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
-      height: 2
+      height: 2,
     },
     shadowOpacity: 0.25,
     shadowRadius: 4,
-    elevation: 5
-  }
+    elevation: 5,
+  },
 });

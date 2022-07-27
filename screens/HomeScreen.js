@@ -6,7 +6,6 @@ import {
   SafeAreaView,
   StatusBar,
   StyleSheet,
-  TouchableOpacity,
   TextInput,
 } from "react-native";
 import { RenderPods } from "../components/renderPods";
@@ -18,6 +17,7 @@ import { ModalLittleWrapper } from "../components/modalLittleWrapper";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { MainButton } from "../components/mainButton";
+import { IconButton } from "../components/iconButton";
 
 export function HomeScreen({ navigation }) {
   const { getListPods, podsList, inPod, activePod, deletePod, createPod } =
@@ -49,12 +49,12 @@ export function HomeScreen({ navigation }) {
     deletePod(pod);
   };
 
-  const createCurrentPod = (title)=>{
+  const createCurrentPod = (title) => {
     setModalLittleVisible(false);
     createPod(title);
     setNewPodName("");
-  }
-  
+  };
+
   return (
     <>
       {podsList.length !== 0 && (
@@ -93,45 +93,21 @@ export function HomeScreen({ navigation }) {
         modalVisible={modalVisible}
         buttonClickedHandler={buttonClickedHandler}
       >
-        <View
-          style={{
-            flexDirection: "row",
-            alignItems: "flex-end",
-            justifyContent: "space-around",
-            width: "100%",
-          }}
+        <IconButton onPress={() => openPod(activePod)} title={"Open pod"}>
+          <Ionicons name="ios-open-outline" size={28} color="#20B954" />
+        </IconButton>
+        <IconButton
+          onPress={() => deleteCurrentPod(activePod)}
+          title={"Delete pod"}
         >
-          <View style={styles.containercircleButton}>
-            <TouchableOpacity
-              style={styles.circleButton}
-              onPress={() => openPod(activePod)}
-            >
-              <Ionicons name="ios-open-outline" size={28} color="#20B954" />
-            </TouchableOpacity>
-            <Text>Open pod</Text>
-          </View>
-          <View style={styles.containercircleButton}>
-            <TouchableOpacity
-              style={styles.circleButton}
-              onPress={() => deleteCurrentPod(activePod)}
-            >
-              <MaterialIcons name="delete-outline" size={30} color="#ad535f" />
-            </TouchableOpacity>
-            <Text>Delete pod</Text>
-          </View>
-        </View>
+          <MaterialIcons name="delete-outline" size={30} color="#ad535f" />
+        </IconButton>
       </ModalWrapper>
 
       <ModalLittleWrapper
         modalVisible={modaLittlelVisible}
         buttonClickedHandler={buttonClickedHandlerLittle}
-      >
-        <View
-          style={{
-            width: "100%",
-          }}
-        >
-          <Text
+      ><Text
             style={{
               fontSize: 18,
             }}
@@ -150,7 +126,6 @@ export function HomeScreen({ navigation }) {
             backgroundColor={{ backgroundColor: "#20B954" }}
             onPress={() => createCurrentPod(newPodName)}
           />
-        </View>
       </ModalLittleWrapper>
     </>
   );
@@ -159,7 +134,7 @@ export function HomeScreen({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: StatusBar.currentHeight || 0,
+    paddingTop: StatusBar.currentHeight || 0,
   },
   containerCleen: {
     flex: 0.8,
@@ -173,20 +148,6 @@ const styles = StyleSheet.create({
   },
   title: {
     fontSize: 32,
-  },
-  circleButton: {
-    borderColor: "gray",
-    borderRadius: 100,
-    borderWidth: 1,
-    width: 60,
-    height: 60,
-    justifyContent: "center",
-    alignItems: "center",
-    marginBottom: 8,
-  },
-  containercircleButton: {
-    justifyContent: "center",
-    alignItems: "center",
   },
   input: {
     height: 40,

@@ -1,4 +1,4 @@
-import { CHOOSE_POD, CREATE_POD, DELETE_POD, GET_LIST_FILES, GET_LIST_PODS, IN_POD } from "./actions";
+import { CHOOSE_POD, CREATE_FOLDER, CREATE_POD, DELETE_POD, GET_LIST_FILES, GET_LIST_PODS, IN_POD } from "./actions";
 
 export const PodsReduser = (state, action) => {
   switch (action.type) {
@@ -32,7 +32,12 @@ export const PodsReduser = (state, action) => {
       return {
         ...state,
         podsList: [...state.podsList, action.pod]
-      }      
+      };
+    case CREATE_FOLDER:
+      return {
+        ...state,
+        currentListFiles: [...state.currentListFiles, action.data]
+      }        
     default:
       return state;
   }

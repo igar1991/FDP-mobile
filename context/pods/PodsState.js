@@ -1,7 +1,7 @@
 import { useMemo, useReducer } from "react";
 import { PodsContext } from "./context";
 import { PodsReduser } from "./reducer";
-import { CHOOSE_POD, CREATE_POD, DELETE_POD, GET_LIST_FILES, GET_LIST_PODS, IN_POD } from "./actions";
+import { CHOOSE_POD, CREATE_FOLDER, CREATE_POD, DELETE_POD, GET_LIST_FILES, GET_LIST_PODS, IN_POD } from "./actions";
 
 export const PodsState = (props) => {
   const initialState = {
@@ -40,15 +40,18 @@ export const PodsState = (props) => {
         const list = [
           {
             id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
-            title: "First folder",
+            title: "first folder",
+            type: "folder"
           },
           {
             id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
-            title: "Second folder",
+            title: "fecond folder",
+            type: "file"
           },
           {
             id: "58694a0f-3da1-471f-bd96-145571e29d72",
-            title: "Third folder",
+            title: "fhird folder",
+            type: "file"
           },
         ];
         dispatch({type: CHOOSE_POD, pod})
@@ -64,20 +67,32 @@ export const PodsState = (props) => {
           const pod = {id: '111', title: name}
           dispatch({type: CREATE_POD, pod})
       },
+      createFolder: async (pod, directory, name)=>{
+        //const res = await fdp.directory.create('my-new-pod', 'my-dir')
+        const res = {
+          id: "bd7acbdddea-c1b1-46c2-aed5-3ad53abb28ba",
+          title: name,
+          type: "folder"
+        }
+          dispatch({type: CREATE_FOLDER, data: res })
+      },
       getDerectoryList: async (activePod, directory) => {
         // const list = await fdp.directory.read('my-new-pod', directory)
         const list = [
           {
             id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
-            title: "First Item",
+            title: "first folder",
+            type: "folder"
           },
           {
             id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
-            title: "Second Item",
+            title: "fecond folder",
+            type: "file"
           },
           {
             id: "58694a0f-3da1-471f-bd96-145571e29d72",
-            title: "Third Item",
+            title: "fhird folder",
+            type: "file"
           },
         ];
         dispatch({ type: GET_LIST_FILES, data: list });
