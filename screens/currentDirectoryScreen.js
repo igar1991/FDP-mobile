@@ -1,5 +1,13 @@
-import React, { useContext, useEffect, useState } from "react";
-import { FlatList, SafeAreaView, StatusBar, StyleSheet, Text, View, TextInput } from "react-native";
+import React, { useContext, useEffect, useState, useCallback } from "react";
+import {
+  FlatList,
+  SafeAreaView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+} from "react-native";
 import { PodsContext } from "../context/pods/context";
 import { RenderDirectory } from "../components/renderDirectory";
 import { CircleButton } from "../components/circleButton";
@@ -8,6 +16,9 @@ import { IconButton } from "../components/iconButton";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { ModalLittleWrapper } from "../components/modalLittleWrapper";
 import { MainButton } from "../components/mainButton";
+import * as DocumentPicker from "expo-document-picker";
+import { Ionicons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 
 export const CurrentDirectoryScreen = ({ navigation }) => {
   const {
@@ -15,12 +26,16 @@ export const CurrentDirectoryScreen = ({ navigation }) => {
     activePod,
     getDerectoryList,
     createFolder,
-    deleteCurrentPod,
+    activFolderFile,
+    deleteFolder,
+    deleteFile,
   } = useContext(PodsContext);
 
   const [modalVisible, setModalVisible] = useState(false);
   const [modaLittlelVisible, setModalLittleVisible] = useState(false);
   const [folderName, setFolderName] = useState("");
+  const [fileResponse, setFileResponse] = useState([]);
+  const [modalMenu, setModalMenu] = useState(false);
 
   useEffect(() => {
     navigation.setOptions({
@@ -36,12 +51,30 @@ export const CurrentDirectoryScreen = ({ navigation }) => {
     setModalLittleVisible(ismodal);
     setModalVisible(false);
   };
+  const buttonClickedHandlerMenu = (ismodal) => {
+    setModalMenu(ismodal);
+  };
 
   const createCurrentFolder = (pod, name) => {
     const currentDirectory = getDirectory();
     createFolder(pod, currentDirectory, name);
     setModalLittleVisible(false);
     setFolderName("");
+  };
+
+  const deleteCurrentFolderFile = (pod, item) => {
+    const currentDirectory = getDirectory();
+    if (item.type === "folder") {
+      deleteFolder(pod, currentDirectory, item);
+    } else {
+      deleteFile(pod, currentDirectory, item);
+    }
+    setModalMenu(false);
+  };
+
+  const openFolderFile = (item) => {
+    setModalMenu(false);
+    navigation.push("Directory");
   };
 
   const getDirectory = () => {
@@ -54,29 +87,53 @@ export const CurrentDirectoryScreen = ({ navigation }) => {
     });
     return root.length === 0 ? "/" : root.join("/");
   };
+
+  const handleDocumentSelection = useCallback(async () => {
+    try {
+      const response = await DocumentPicker.getDocumentAsync({
+        presentationStyle: "fullScreen",
+      });
+      setFileResponse(response);
+      console.log(response);
+    } catch (err) {
+      console.warn(err);
+    }
+  }, []);
+
   return (
     <>
-      <SafeAreaView style={styles.container}>
-        <FlatList
-          data={currentListFiles}
-          renderItem={({ item }) => (
-            <RenderDirectory navigation={navigation} item={item} />
-          )}
-          keyExtractor={(item) => item.id}
-        />
-      </SafeAreaView>
+      {currentListFiles.length !== 0 ? (
+        <SafeAreaView style={styles.container}>
+          <FlatList
+            data={currentListFiles}
+            renderItem={({ item }) => (
+              <RenderDirectory
+                navigation={navigation}
+                item={item}
+                buttonClickedHandler={buttonClickedHandlerMenu}
+              />
+            )}
+            keyExtractor={(item) => item.id}
+          />
+        </SafeAreaView>
+      ) : (
+        <View style={styles.containerCleen}>
+          <FontAwesome5 name="folder-plus" size={100} color="#FF9A22" />
+          <Text style={{ marginTop: 10, fontSize: 20 }}>Nothing yet.</Text>
+        </View>
+      )}
       <CircleButton buttonClickedHandler={() => buttonClickedHandler(true)} />
       <ModalWrapper
         modalVisible={modalVisible}
         buttonClickedHandler={buttonClickedHandler}
       >
-        <IconButton onPress={() => buttonClickedHandlerLittle(true)} title={"Create folder"}>
+        <IconButton
+          onPress={() => buttonClickedHandlerLittle(true)}
+          title={"Create folder"}
+        >
           <FontAwesome5 name="folder-plus" size={28} color="#FF9A22" />
         </IconButton>
-        <IconButton
-          onPress={() => deleteCurrentPod(activePod)}
-          title={"Upload file"}
-        >
+        <IconButton onPress={handleDocumentSelection} title={"Upload file"}>
           <FontAwesome5 name="file-upload" size={28} color="#6945f8" />
         </IconButton>
       </ModalWrapper>
@@ -101,9 +158,26 @@ export const CurrentDirectoryScreen = ({ navigation }) => {
         <MainButton
           title="Create"
           backgroundColor={{ backgroundColor: "#20B954" }}
-          onPress={() => createCurrentFolder(activePod, folderName )}
+          onPress={() => createCurrentFolder(activePod, folderName)}
         />
       </ModalLittleWrapper>
+      <ModalWrapper
+        modalVisible={modalMenu}
+        buttonClickedHandler={buttonClickedHandlerMenu}
+      >
+        <IconButton
+          onPress={() => openFolderFile(activFolderFile)}
+          title={"Open"}
+        >
+          <Ionicons name="ios-open-outline" size={28} color="#20B954" />
+        </IconButton>
+        <IconButton
+          onPress={() => deleteCurrentFolderFile(activePod, activFolderFile)}
+          title={"Delete"}
+        >
+          <MaterialIcons name="delete-outline" size={30} color="#ad535f" />
+        </IconButton>
+      </ModalWrapper>
     </>
   );
 };
@@ -139,5 +213,10 @@ const styles = StyleSheet.create({
     height: 1,
     width: "100%",
     marginTop: 10,
+  },
+  containerCleen: {
+    flex: 0.8,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

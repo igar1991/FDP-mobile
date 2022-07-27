@@ -40,7 +40,7 @@ export function HomeScreen({ navigation }) {
 
   const openPod = (pod) => {
     setModalVisible(false);
-    inPod(pod);
+    //inPod(pod);
     navigation.push("Directory");
   };
 

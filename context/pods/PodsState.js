@@ -1,13 +1,14 @@
 import { useMemo, useReducer } from "react";
 import { PodsContext } from "./context";
 import { PodsReduser } from "./reducer";
-import { CHOOSE_POD, CREATE_FOLDER, CREATE_POD, DELETE_POD, GET_LIST_FILES, GET_LIST_PODS, IN_POD } from "./actions";
+import { CHOOSE_POD, ADD_IN_DIRECTORY, CREATE_POD, DELETE_POD, GET_LIST_FILES, GET_LIST_PODS, IN_POD, CHOOSE_FOLDER_FILE, DELETE_FOLDER, DELETE_FILE } from "./actions";
 
 export const PodsState = (props) => {
   const initialState = {
     podsList: [],
     currentListFiles: [],
     activePod: null,
+    activFolderFile: null
   };
 
   const [state, dispatch] = useReducer(PodsReduser, initialState);
@@ -34,6 +35,9 @@ export const PodsState = (props) => {
       },
       choosePod: (pod)=>{
         dispatch({type: CHOOSE_POD, pod})
+      },
+      chooseFolderFile: (item)=>{
+        dispatch({type: CHOOSE_FOLDER_FILE, data: item})
       },
       inPod: async (pod) => {
         // const list = await fdp.directory.read('my-new-pod', '/')
@@ -74,7 +78,26 @@ export const PodsState = (props) => {
           title: name,
           type: "folder"
         }
-          dispatch({type: CREATE_FOLDER, data: res })
+          dispatch({type: ADD_IN_DIRECTORY, data: res })
+      },
+      deleteFolder: async (pod, directory, item)=>{
+        //const res = await fdp.directory.delete('my-new-pod', 'my-dir')
+        dispatch({type: DELETE_FOLDER, data: item})
+        console.log("delete folder")
+      },
+      deleteFile: async (pod, directory, item)=>{
+        //const res = await fdp.file.delete('my-new-pod', '/my-dir/myfile.txt')
+        dispatch({type: DELETE_FILE, data: item})
+        console.log("delete file")
+      },
+      uploadFile: async ()=>{
+        //const res = await fdp.file.uploadData('my-new-pod', '/my-dir/myfile.txt', 'Hello world!');
+        const res = {
+          id: "bd7acbdddea-c1b1-46c2-aed5-3ad53abb28ba",
+          title: "text",
+          type: "file"
+        }
+        dispatch({type: ADD_IN_DIRECTORY, data: res})
       },
       getDerectoryList: async (activePod, directory) => {
         // const list = await fdp.directory.read('my-new-pod', directory)

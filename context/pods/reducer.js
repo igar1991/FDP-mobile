@@ -1,4 +1,15 @@
-import { CHOOSE_POD, CREATE_FOLDER, CREATE_POD, DELETE_POD, GET_LIST_FILES, GET_LIST_PODS, IN_POD } from "./actions";
+import {
+  CHOOSE_POD,
+  ADD_IN_DIRECTORY,
+  CREATE_POD,
+  DELETE_POD,
+  GET_LIST_FILES,
+  GET_LIST_PODS,
+  IN_POD,
+  CHOOSE_FOLDER_FILE,
+  DELETE_FOLDER,
+  DELETE_FILE,
+} from "./actions";
 
 export const PodsReduser = (state, action) => {
   switch (action.type) {
@@ -17,27 +28,50 @@ export const PodsReduser = (state, action) => {
         ...state,
         currentListFiles: action.data,
       };
-    case CHOOSE_POD: 
+    case CHOOSE_POD:
       return {
         ...state,
         activePod: action.pod,
       };
-    case DELETE_POD:
-      const listPods = state.podsList.filter((el)=>el.id !== action.pod.id)
+    case CHOOSE_FOLDER_FILE:
       return {
         ...state,
-        podsList: listPods
+        activFolderFile: action.data,
+      };
+    case DELETE_POD:
+      const listPods = state.podsList.filter((el) => el.id !== action.pod.id);
+      return {
+        ...state,
+        podsList: listPods,
+      };
+    case DELETE_FOLDER:
+      const folderList = state.currentListFiles.filter(
+        (el) => el.id !== action.data.id
+      );
+      return {
+        ...state,
+        currentListFiles: folderList,
+        activFolderFile: null,
+      };
+    case DELETE_FILE:
+      const fileList = state.currentListFiles.filter(
+        (el) => el.id !== action.data.id
+      );
+      return {
+        ...state,
+        currentListFiles: fileList,
+        activFolderFile: null,
       };
     case CREATE_POD:
       return {
         ...state,
-        podsList: [...state.podsList, action.pod]
+        podsList: [...state.podsList, action.pod],
       };
-    case CREATE_FOLDER:
+    case ADD_IN_DIRECTORY:
       return {
         ...state,
-        currentListFiles: [...state.currentListFiles, action.data]
-      }        
+        currentListFiles: [...state.currentListFiles, action.data],
+      };
     default:
       return state;
   }

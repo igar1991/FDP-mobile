@@ -17,7 +17,7 @@ export const RenderPods = ({ item, navigation, buttonClickedHandler }) => {
     buttonClickedHandler(true)
   }
   return (
-    <TouchableOpacity onPress={goToDirectory} style={styles.item} onLongPress={()=>buttonClickedHandler(true)}>
+    <TouchableOpacity onPress={goToDirectory} style={styles.item} onLongPress={openMenu}>
       <View style={styles.container}>
         <MaterialCommunityIcons name="harddisk" size={26} color="#6945f8" />
         <Text style={styles.title}>{item.title}</Text>
