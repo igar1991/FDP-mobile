@@ -9,6 +9,7 @@ import {
   CHOOSE_FOLDER_FILE,
   DELETE_FOLDER,
   DELETE_FILE,
+  CHANGE_STATUS,
 } from "./actions";
 
 export const PodsReduser = (state, action) => {
@@ -72,6 +73,11 @@ export const PodsReduser = (state, action) => {
         ...state,
         currentListFiles: [...state.currentListFiles, action.data],
       };
+    case CHANGE_STATUS:
+      return {
+        ...state,
+        statusUpdateItem: action.data
+      }  
     default:
       return state;
   }

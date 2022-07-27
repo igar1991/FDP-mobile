@@ -7,6 +7,7 @@ import {
   Text,
   View,
   TextInput,
+  ActivityIndicator
 } from "react-native";
 import { PodsContext } from "../context/pods/context";
 import { RenderDirectory } from "../components/renderDirectory";
@@ -29,6 +30,7 @@ export const CurrentDirectoryScreen = ({ navigation }) => {
     activFolderFile,
     deleteFolder,
     deleteFile,
+    statusUpdateItem
   } = useContext(PodsContext);
 
   const [modalVisible, setModalVisible] = useState(false);
@@ -118,8 +120,11 @@ export const CurrentDirectoryScreen = ({ navigation }) => {
         </SafeAreaView>
       ) : (
         <View style={styles.containerCleen}>
-          <FontAwesome5 name="folder-plus" size={100} color="#FF9A22" />
-          <Text style={{ marginTop: 10, fontSize: 20 }}>Nothing yet.</Text>
+          {statusUpdateItem === "pending" ? (
+            <ActivityIndicator size="large" color="#6945f8" />
+          ) : (<><FontAwesome5 name="folder-plus" size={100} color="#FF9A22" />
+          <Text style={{ marginTop: 10, fontSize: 20 }}>Nothing yet.</Text></>)}
+          
         </View>
       )}
       <CircleButton buttonClickedHandler={() => buttonClickedHandler(true)} />

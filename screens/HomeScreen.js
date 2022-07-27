@@ -7,6 +7,7 @@ import {
   StatusBar,
   StyleSheet,
   TextInput,
+  ActivityIndicator,
 } from "react-native";
 import { RenderPods } from "../components/renderPods";
 import { PodsContext } from "../context/pods/context";
@@ -20,8 +21,15 @@ import { MainButton } from "../components/mainButton";
 import { IconButton } from "../components/iconButton";
 
 export function HomeScreen({ navigation }) {
-  const { getListPods, podsList, inPod, activePod, deletePod, createPod } =
-    useContext(PodsContext);
+  const {
+    getListPods,
+    podsList,
+    inPod,
+    activePod,
+    deletePod,
+    createPod,
+    statusUpdateItem,
+  } = useContext(PodsContext);
   const [modalVisible, setModalVisible] = useState(false);
   const [modaLittlelVisible, setModalLittleVisible] = useState(false);
   const [newPodName, setNewPodName] = useState("");
@@ -74,17 +82,23 @@ export function HomeScreen({ navigation }) {
       )}
       {podsList.length === 0 && (
         <View style={styles.containerCleen}>
-          <MaterialCommunityIcons
-            name="harddisk-remove"
-            size={100}
-            color="#6945f8"
-          />
-          <Text style={{ marginTop: 10, fontSize: 20 }}>
-            You don't have any pods yet.
-          </Text>
-          <Text style={{ marginTop: 10, fontSize: 18 }}>
-            Please create a pod for uploading files.
-          </Text>
+          {statusUpdateItem === "pending" ? (
+            <ActivityIndicator size="large" color="#6945f8" />
+          ) : (
+            <>
+              <MaterialCommunityIcons
+                name="harddisk-remove"
+                size={100}
+                color="#6945f8"
+              />
+              <Text style={{ marginTop: 10, fontSize: 20 }}>
+                You don't have any pods yet.
+              </Text>
+              <Text style={{ marginTop: 10, fontSize: 18 }}>
+                Please create a pod for uploading files.
+              </Text>
+            </>
+          )}
         </View>
       )}
       <CircleButton buttonClickedHandler={buttonClickedHandlerLittle} />
@@ -107,25 +121,26 @@ export function HomeScreen({ navigation }) {
       <ModalLittleWrapper
         modalVisible={modaLittlelVisible}
         buttonClickedHandler={buttonClickedHandlerLittle}
-      ><Text
-            style={{
-              fontSize: 18,
-            }}
-          >
-            Create new pod
-          </Text>
-          <View style={styles.hairline} />
-          <TextInput
-            style={styles.input}
-            placeholder="My new pod"
-            value={newPodName}
-            onChangeText={setNewPodName}
-          />
-          <MainButton
-            title="Create"
-            backgroundColor={{ backgroundColor: "#20B954" }}
-            onPress={() => createCurrentPod(newPodName)}
-          />
+      >
+        <Text
+          style={{
+            fontSize: 18,
+          }}
+        >
+          Create new pod
+        </Text>
+        <View style={styles.hairline} />
+        <TextInput
+          style={styles.input}
+          placeholder="My new pod"
+          value={newPodName}
+          onChangeText={setNewPodName}
+        />
+        <MainButton
+          title="Create"
+          backgroundColor={{ backgroundColor: "#20B954" }}
+          onPress={() => createCurrentPod(newPodName)}
+        />
       </ModalLittleWrapper>
     </>
   );

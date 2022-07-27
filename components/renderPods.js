@@ -9,7 +9,8 @@ export const RenderPods = ({ item, navigation, buttonClickedHandler }) => {
 
   const goToDirectory = () => {
     navigation.push("Directory");
-    inPod(item);
+    //inPod(item);
+    choosePod(item);
   };
 
   const openMenu =()=>{

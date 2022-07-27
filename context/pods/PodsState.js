@@ -1,14 +1,15 @@
 import { useMemo, useReducer } from "react";
 import { PodsContext } from "./context";
 import { PodsReduser } from "./reducer";
-import { CHOOSE_POD, ADD_IN_DIRECTORY, CREATE_POD, DELETE_POD, GET_LIST_FILES, GET_LIST_PODS, IN_POD, CHOOSE_FOLDER_FILE, DELETE_FOLDER, DELETE_FILE } from "./actions";
+import { CHOOSE_POD, ADD_IN_DIRECTORY, CREATE_POD, DELETE_POD, GET_LIST_FILES, GET_LIST_PODS, IN_POD, CHOOSE_FOLDER_FILE, DELETE_FOLDER, DELETE_FILE, CHANGE_STATUS } from "./actions";
 
 export const PodsState = (props) => {
   const initialState = {
     podsList: [],
     currentListFiles: [],
     activePod: null,
-    activFolderFile: null
+    activFolderFile: null,
+    statusUpdateItem: null
   };
 
   const [state, dispatch] = useReducer(PodsReduser, initialState);
@@ -31,7 +32,37 @@ export const PodsState = (props) => {
             title: "Third Item",
           }
         ];
-        dispatch({ type: GET_LIST_PODS, data: pods });
+        dispatch({type: CHANGE_STATUS, data: "pending"})
+        setTimeout(()=>{
+          dispatch({ type: GET_LIST_PODS, data: pods });
+          dispatch({type: CHANGE_STATUS, data: null})
+        }, 5000)
+        
+      },
+      getDerectoryList: async (activePod, directory) => {
+        // const list = await fdp.directory.read('my-new-pod', directory)
+        const list = [
+          {
+            id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
+            title: "first folder",
+            type: "folder"
+          },
+          {
+            id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
+            title: "fecond folder",
+            type: "file"
+          },
+          {
+            id: "58694a0f-3da1-471f-bd96-145571e29d72",
+            title: "fhird folder",
+            type: "file"
+          },
+        ];
+        dispatch({type: CHANGE_STATUS, data: "pending"})
+        setTimeout(()=>{
+        dispatch({ type: GET_LIST_FILES, data: list });
+        dispatch({type: CHANGE_STATUS, data: null})
+        }, 5000)
       },
       choosePod: (pod)=>{
         dispatch({type: CHOOSE_POD, pod})
@@ -98,28 +129,7 @@ export const PodsState = (props) => {
           type: "file"
         }
         dispatch({type: ADD_IN_DIRECTORY, data: res})
-      },
-      getDerectoryList: async (activePod, directory) => {
-        // const list = await fdp.directory.read('my-new-pod', directory)
-        const list = [
-          {
-            id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
-            title: "first folder",
-            type: "folder"
-          },
-          {
-            id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
-            title: "fecond folder",
-            type: "file"
-          },
-          {
-            id: "58694a0f-3da1-471f-bd96-145571e29d72",
-            title: "fhird folder",
-            type: "file"
-          },
-        ];
-        dispatch({ type: GET_LIST_FILES, data: list });
-      },
+      }
     }),
     []
   );
