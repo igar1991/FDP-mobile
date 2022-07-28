@@ -2,6 +2,8 @@ import { useMemo, useReducer } from "react";
 import { PodsContext } from "./context";
 import { PodsReduser } from "./reducer";
 import { CHOOSE_POD, ADD_IN_DIRECTORY, CREATE_POD, DELETE_POD, GET_LIST_FILES, GET_LIST_PODS, IN_POD, CHOOSE_FOLDER_FILE, DELETE_FOLDER, DELETE_FILE, CHANGE_STATUS } from "./actions";
+import * as FileSystem from 'expo-file-system';
+import { shareAsync } from 'expo-sharing';
 
 export const PodsState = (props) => {
   const initialState = {
@@ -36,7 +38,7 @@ export const PodsState = (props) => {
         setTimeout(()=>{
           dispatch({ type: GET_LIST_PODS, data: pods });
           dispatch({type: CHANGE_STATUS, data: null})
-        }, 5000)
+        }, 0)
         
       },
       getDerectoryList: async (activePod, directory) => {
@@ -121,14 +123,23 @@ export const PodsState = (props) => {
         dispatch({type: DELETE_FILE, data: item})
         console.log("delete file")
       },
-      uploadFile: async ()=>{
+      uploadFile: async (pod, directory, file)=>{
         //const res = await fdp.file.uploadData('my-new-pod', '/my-dir/myfile.txt', 'Hello world!');
+        console.log(pod, directory, file)
         const res = {
           id: "bd7acbdddea-c1b1-46c2-aed5-3ad53abb28ba",
           title: "text",
           type: "file"
         }
         dispatch({type: ADD_IN_DIRECTORY, data: res})
+      },
+      openFile: async(pod,directory, file)=>{
+        //const data = await fdp.file.downloadData('my-new-pod', '/myfile.txt')
+        //const uri = FileSystem.documentDirectory + file;
+        //const resBase64 = await FileSystem.readAsStringAsync(data, {encoding: FileSystem.EncodingType.Base64});
+        //await FileSystem.writeAsStringAsync(uri, resBase64, { encoding: FileSystem.EncodingType.Base64 });
+        //await shareAsync(file);
+        console.log(pod,directory, file);
       }
     }),
     []

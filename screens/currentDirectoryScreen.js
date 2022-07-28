@@ -20,6 +20,7 @@ import { MainButton } from "../components/mainButton";
 import * as DocumentPicker from "expo-document-picker";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
+import * as FileSystem from 'expo-file-system';
 
 export const CurrentDirectoryScreen = ({ navigation }) => {
   const {
@@ -30,13 +31,14 @@ export const CurrentDirectoryScreen = ({ navigation }) => {
     activFolderFile,
     deleteFolder,
     deleteFile,
-    statusUpdateItem
+    statusUpdateItem,
+    uploadFile,
+    openFile
   } = useContext(PodsContext);
 
   const [modalVisible, setModalVisible] = useState(false);
   const [modaLittlelVisible, setModalLittleVisible] = useState(false);
   const [folderName, setFolderName] = useState("");
-  const [fileResponse, setFileResponse] = useState([]);
   const [modalMenu, setModalMenu] = useState(false);
 
   useEffect(() => {
@@ -74,9 +76,15 @@ export const CurrentDirectoryScreen = ({ navigation }) => {
     setModalMenu(false);
   };
 
-  const openFolderFile = (item) => {
+  const openFolderFile = async (pod, item) => {
+    const currentDirectory = getDirectory();
+    if(item.type === "folder") {
+      navigation.push("Directory");
+    } else {
+      openFile(pod, currentDirectory,item.title)
+    }
     setModalMenu(false);
-    navigation.push("Directory");
+
   };
 
   const getDirectory = () => {
@@ -90,15 +98,21 @@ export const CurrentDirectoryScreen = ({ navigation }) => {
     return root.length === 0 ? "/" : root.join("/");
   };
 
-  const handleDocumentSelection = useCallback(async () => {
+  const uploadCurrentFile = useCallback(async (pod) => {
     try {
-      const response = await DocumentPicker.getDocumentAsync({
-        presentationStyle: "fullScreen",
-      });
-      setFileResponse(response);
-      console.log(response);
+      const currentDirectory = getDirectory();
+      const response = await DocumentPicker.getDocumentAsync();
+      const resBase64 = await FileSystem.readAsStringAsync(response.uri, {encoding: FileSystem.EncodingType.Base64});
+        // const cUti = await FileSystem.getContentUriAsync(response)
+        // console.log(cUti)
+        // const res = startActivityAsync('android.intent.action.VIEW', {
+        //   data: cUti,
+        //   flags: 1,
+        // })
+        setModalVisible(false);
+        uploadFile(pod, currentDirectory, resBase64);
     } catch (err) {
-      console.warn(err);
+      console.log(err);
     }
   }, []);
 
@@ -138,7 +152,7 @@ export const CurrentDirectoryScreen = ({ navigation }) => {
         >
           <FontAwesome5 name="folder-plus" size={28} color="#FF9A22" />
         </IconButton>
-        <IconButton onPress={handleDocumentSelection} title={"Upload file"}>
+        <IconButton onPress={()=>uploadCurrentFile(activePod)} title={"Upload file"}>
           <FontAwesome5 name="file-upload" size={28} color="#6945f8" />
         </IconButton>
       </ModalWrapper>
@@ -171,7 +185,7 @@ export const CurrentDirectoryScreen = ({ navigation }) => {
         buttonClickedHandler={buttonClickedHandlerMenu}
       >
         <IconButton
-          onPress={() => openFolderFile(activFolderFile)}
+          onPress={() => openFolderFile(activePod, activFolderFile)}
           title={"Open"}
         >
           <Ionicons name="ios-open-outline" size={28} color="#20B954" />

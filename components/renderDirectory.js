@@ -1,8 +1,6 @@
 import React, { useContext } from "react";
 import { Text, TouchableOpacity, StyleSheet, View } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
-import { Ionicons } from '@expo/vector-icons';
 import { FontAwesome } from '@expo/vector-icons';
 import { PodsContext } from "../context/pods/context";
 
@@ -14,7 +12,7 @@ export const RenderDirectory = ({ item, navigation, buttonClickedHandler }) => {
     if(item.type === "folder") {
       navigation.push("Directory", { dir: item.title });
     } else {
-      console.log("This is file")
+      openMenu();
     }
   };
 
