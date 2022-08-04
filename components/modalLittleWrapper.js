@@ -4,6 +4,7 @@ export const ModalLittleWrapper = ({
   children,
   modalVisible,
   buttonClickedHandler,
+  style
 }) => {
   return (
     <Modal
@@ -15,7 +16,7 @@ export const ModalLittleWrapper = ({
       }}
     >
       <Pressable
-        style={styles.centeredView}
+        style={{...styles.centeredView, ...style}}
         onPress={() => buttonClickedHandler(false)}
       >
         <Pressable style={styles.modalView}>
@@ -41,7 +42,6 @@ const styles = StyleSheet.create({
   },
   modalView: {
     margin: 0,
-    width: "70%",
     backgroundColor: "white",
     borderRadius: 15,
     padding: 10,

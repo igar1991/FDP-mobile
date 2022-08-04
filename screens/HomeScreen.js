@@ -8,6 +8,7 @@ import {
   StyleSheet,
   TextInput,
   ActivityIndicator,
+  Dimensions
 } from "react-native";
 import { RenderPods } from "../components/renderPods";
 import { PodsContext } from "../context/pods/context";
@@ -19,6 +20,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { MainButton } from "../components/mainButton";
 import { IconButton } from "../components/iconButton";
+
+const screen = Dimensions.get('screen');
 
 export function HomeScreen({ navigation }) {
   const {
@@ -175,7 +178,7 @@ const styles = StyleSheet.create({
   hairline: {
     backgroundColor: "#000",
     height: 1,
-    width: "100%",
+    width: screen.width*0.7,
     marginTop: 10,
   },
 });

@@ -1,7 +1,22 @@
 import { useMemo, useReducer } from "react";
 import { AuthContext } from "./context";
 import { AuthReduser } from "./reducer";
-import { CREATE_WALLET, GET_BALANCE, SIGN_IN, SIGN_OUT } from "./actions";
+import {
+  CLEAR_AUTH,
+  CREATE_WALLET,
+  ERROR_AUTH,
+  GET_BALANCE,
+  PENDING_AUTH,
+  SIGN_IN,
+  SIGN_OUT,
+  UPDATE_WALLET,
+} from "./actions";
+import { FdpStorage } from "@fairdatasociety/fdp-storage";
+import {
+  Environments,
+  getEnvironmentConfig,
+} from "@fairdatasociety/fdp-contracts";
+import * as SecureStore from "expo-secure-store";
 
 export const AuthState = (props) => {
   const initialState = {
@@ -9,36 +24,93 @@ export const AuthState = (props) => {
     isSignout: false,
     isAuth: false,
     userWallet: null,
-    userBalance: 0
+    userBalance: 0,
+    statusModalAuth: {isVisible: false, message: '', isError: false},
   };
+
+  const fdp = new FdpStorage(
+    "https://bee-test.bzzwiki.xyz/",
+    "https://bee-debug-test.bzzwiki.xyz/",
+    {
+      ensOptions: {
+        ...getEnvironmentConfig(Environments.LOCALHOST),
+        rpcUrl: "https://chain-test.bzzwiki.xyz/",
+        performChecks: true,
+      },
+    }
+  );
 
   const [state, dispatch] = useReducer(AuthReduser, initialState);
 
   const authContext = useMemo(
     () => ({
-      signIn: async () => {
-        // In a production app, we need to send some data (usually username, password) to server and get a token
-        // We will also need to handle errors if sign in failed
-        // After getting token, we need to persist the token using `SecureStore`
-        // In the example, we'll use a dummy token
-        dispatch({ type: SIGN_IN, wallet: '0x000000000000000' });
+      signIn: async ({ username, password }) => {
+        try {
+          dispatch({type: PENDING_AUTH, message: 'Sign In...'})
+          console.log(username, password);
+          const wallet = await fdp.account.login(username, password);
+          console.log(wallet);
+          dispatch({ type: SIGN_IN, wallet: wallet.address});
+          dispatch({type: CLEAR_AUTH})
+        }catch(err) {
+          console.log(err.message)
+          dispatch({type: ERROR_AUTH, message: `Error! ${err.message}`})
+        }
       },
       signOut: () => {
-        dispatch({ type: SIGN_OUT })
+        dispatch({ type: SIGN_OUT });
       },
-      signUp: async () => {
-        // In a production app, we need to send user data to server and get a token
-        // We will also need to handle errors if sign up failed
-        // After getting token, we need to persist the token using `SecureStore`
-        // In the example, we'll use a dummy token
+      signUp: async ({ username, password }) => {
+        try {
+          dispatch({type: PENDING_AUTH, message: 'Sign Up...'})
+          console.log(username, password)
+          const userMnemonic = await SecureStore.getItemAsync("mnemonic");
+          console.log(userMnemonic, 'USER MNEMONIC');
+          fdp.account.setAccountFromMnemonic(userMnemonic);
+          await fdp.account.register(username, password);
+          dispatch({type: PENDING_AUTH, message: 'Sign In...'});
+          const wallet = await fdp.account.login(username, password);
+          dispatch({ type: SIGN_IN, wallet: wallet.address});
+          console.log(wallet, "CREATE WALLET");
+          dispatch({type: CLEAR_AUTH});
+        } catch (err) {
+          dispatch({type: ERROR_AUTH, message: `Error! ${err.message}`});
+        }
+      },
+      createWallet: async () => {
+        try {
+          dispatch({type: PENDING_AUTH, message: 'Create wallet...'});
+          const wallet = await fdp.account.createWallet();
+          dispatch({ type: CREATE_WALLET, wallet: wallet.address });
+          console.log(wallet.mnemonic.phrase, "mnemonic");
+          await SecureStore.setItemAsync("userWallet", wallet.address);
+          await SecureStore.setItemAsync("mnemonic", wallet.mnemonic.phrase);
+          dispatch({type: PENDING_AUTH, message: 'Check balance...'});
+          const balance = await fdp.ens.provider.getBalance(wallet.address);
+          dispatch({ type: GET_BALANCE, balance: Number(balance) });
+          console.log(wallet.address, Number(balance), "createWallet");
+          dispatch({type: CLEAR_AUTH});
+        } catch (err) {
+          dispatch({type: ERROR_AUTH, message: `Error! ${err.message}`})
+        }
+      },
+      getBalance: async (wallet) => {
+        try {
+          dispatch({type: PENDING_AUTH, message: 'Check balance...'});
+          const balance = await fdp.ens.provider.getBalance(wallet);
+          console.log(Number(balance), "getBalance");
+          dispatch({ type: GET_BALANCE, balance: Number(balance) });
+          dispatch({type: CLEAR_AUTH});
+        }catch(err){
+          dispatch({type: ERROR_AUTH, message: `Error! ${err.message}`});
+        }
 
-        dispatch({ type: SIGN_IN, wallet: '0x000000000000000' });
       },
-      createWallet: async ()=> {
-        dispatch({type: CREATE_WALLET, wallet: '0x000000000000000', balance: 0 })
+      updateWallet: (wallet) => {
+        dispatch({ type: UPDATE_WALLET, wallet });
       },
-      getBalance: async ()=> {
-        dispatch({type: GET_BALANCE, balance: 1})
+      clearModal: ()=>{
+        dispatch({type: CLEAR_AUTH});
       }
     }),
     []
@@ -48,7 +120,7 @@ export const AuthState = (props) => {
     <AuthContext.Provider
       value={{
         ...state,
-        ...authContext
+        ...authContext,
       }}
     >
       {props.children}
