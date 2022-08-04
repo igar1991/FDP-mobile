@@ -27,11 +27,12 @@ export function HomeScreen({ navigation }) {
   const {
     getListPods,
     podsList,
-    inPod,
     activePod,
     deletePod,
     createPod,
     statusUpdateItem,
+    statusModalPods,
+    clearModal
   } = useContext(PodsContext);
   const [modalVisible, setModalVisible] = useState(false);
   const [modaLittlelVisible, setModalLittleVisible] = useState(false);
@@ -51,7 +52,6 @@ export function HomeScreen({ navigation }) {
 
   const openPod = (pod) => {
     setModalVisible(false);
-    //inPod(pod);
     navigation.push("Directory");
   };
 
@@ -64,6 +64,12 @@ export function HomeScreen({ navigation }) {
     setModalLittleVisible(false);
     createPod(title);
     setNewPodName("");
+  };
+
+  const modalStatus = () => {
+    if (statusModalPods.isError) {
+      clearModal();
+    }
   };
 
   return (
@@ -79,7 +85,7 @@ export function HomeScreen({ navigation }) {
                 buttonClickedHandler={buttonClickedHandler}
               />
             )}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item.index}
           />
         </SafeAreaView>
       )}
@@ -144,6 +150,23 @@ export function HomeScreen({ navigation }) {
           backgroundColor={{ backgroundColor: "#20B954" }}
           onPress={() => createCurrentPod(newPodName)}
         />
+      </ModalLittleWrapper>
+      <ModalLittleWrapper
+        modalVisible={statusModalPods.isVisible}
+        buttonClickedHandler={modalStatus}
+      >
+    <Text
+          style={{
+            fontSize: 20,
+            color: statusModalPods.isError ? "red" : "black",
+            margin: 3,
+          }}
+        >
+          {statusModalPods.message}
+        </Text>
+        {!statusModalPods.isError && (
+          <ActivityIndicator size="large" color="#6945f8" />
+        )}
       </ModalLittleWrapper>
     </>
   );

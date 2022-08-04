@@ -1,9 +1,16 @@
 import { useMemo, useReducer } from "react";
 import { PodsContext } from "./context";
 import { PodsReduser } from "./reducer";
-import { CHOOSE_POD, ADD_IN_DIRECTORY, CREATE_POD, DELETE_POD, GET_LIST_FILES, GET_LIST_PODS, IN_POD, CHOOSE_FOLDER_FILE, DELETE_FOLDER, DELETE_FILE, CHANGE_STATUS } from "./actions";
+import { CHOOSE_POD, ADD_IN_DIRECTORY, CREATE_POD, DELETE_POD, GET_LIST_FILES, GET_LIST_PODS, CHOOSE_FOLDER_FILE, DELETE_FOLDER, DELETE_FILE, CLEAR_PODS, PENDING_PODS, ERROR_PODS } from "./actions";
 import * as FileSystem from 'expo-file-system';
 import { shareAsync } from 'expo-sharing';
+import { FdpStorage } from "@fairdatasociety/fdp-storage";
+import {
+  Environments,
+  getEnvironmentConfig,
+} from "@fairdatasociety/fdp-contracts";
+import { fdp } from "../auth/AuthState";
+
 
 export const PodsState = (props) => {
   const initialState = {
@@ -11,7 +18,7 @@ export const PodsState = (props) => {
     currentListFiles: [],
     activePod: null,
     activFolderFile: null,
-    statusUpdateItem: null
+    statusModalPods: {isVisible: false, message: '', isError: false},
   };
 
   const [state, dispatch] = useReducer(PodsReduser, initialState);
@@ -19,27 +26,15 @@ export const PodsState = (props) => {
   const podsContext = useMemo(
     () => ({
       getListPods: async () => {
-        //const pods = await fdp.personalStorage.list()
-        const pods = [
-          {
-            id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
-            title: "First Item",
-          },
-          {
-            id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
-            title: "Second Item",
-          },
-          {
-            id: "58694a0f-3da1-471f-bd96-145571e29d72",
-            title: "Third Item",
-          }
-        ];
-        dispatch({type: CHANGE_STATUS, data: "pending"})
-        setTimeout(()=>{
+        try {
+          dispatch({type: PENDING_PODS, message: 'Get pods...'});
+          const pods = await fdp.personalStorage.list();
           dispatch({ type: GET_LIST_PODS, data: pods });
-          dispatch({type: CHANGE_STATUS, data: null})
-        }, 0)
-        
+          dispatch({type: CLEAR_PODS});
+        }catch(err) {
+          console.log(err.message)
+          dispatch({type: ERROR_PODS, message: `Error! ${err.message}`});
+        }
       },
       getDerectoryList: async (activePod, directory) => {
         // const list = await fdp.directory.read('my-new-pod', directory)
@@ -60,10 +55,8 @@ export const PodsState = (props) => {
             type: "file"
           },
         ];
-        dispatch({type: CHANGE_STATUS, data: "pending"})
         setTimeout(()=>{
         dispatch({ type: GET_LIST_FILES, data: list });
-        dispatch({type: CHANGE_STATUS, data: null})
         }, 5000)
       },
       choosePod: (pod)=>{
@@ -72,37 +65,21 @@ export const PodsState = (props) => {
       chooseFolderFile: (item)=>{
         dispatch({type: CHOOSE_FOLDER_FILE, data: item})
       },
-      inPod: async (pod) => {
-        // const list = await fdp.directory.read('my-new-pod', '/')
-        const list = [
-          {
-            id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
-            title: "first folder",
-            type: "folder"
-          },
-          {
-            id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
-            title: "fecond folder",
-            type: "file"
-          },
-          {
-            id: "58694a0f-3da1-471f-bd96-145571e29d72",
-            title: "fhird folder",
-            type: "file"
-          },
-        ];
-        dispatch({type: CHOOSE_POD, pod})
-        dispatch({ type: IN_POD, data: list });
-        
-      },
       deletePod: async (pod)=>{
         // const res = await fdp.personalStorage.delete('my-new-pod')
         dispatch({type: DELETE_POD, pod})
       },
       createPod: async (name)=>{
-          // const pod = await fdp.personalStorage.create('my-new-pod')
-          const pod = {id: '111', title: name}
-          dispatch({type: CREATE_POD, pod})
+        try {
+          dispatch({type: PENDING_PODS, message: 'Create pod...'});
+          const pod = await fdp.personalStorage.create(name);
+          console.log(pod)
+          dispatch({type: CREATE_POD, pod});
+          dispatch({type: CLEAR_PODS});
+        } catch(err) {
+          dispatch({type: ERROR_PODS, message: `Error! ${err.message}`});
+        }
+
       },
       createFolder: async (pod, directory, name)=>{
         //const res = await fdp.directory.create('my-new-pod', 'my-dir')
@@ -140,6 +117,9 @@ export const PodsState = (props) => {
         //await FileSystem.writeAsStringAsync(uri, resBase64, { encoding: FileSystem.EncodingType.Base64 });
         //await shareAsync(file);
         console.log(pod,directory, file);
+      },
+      clearModal: ()=>{
+        dispatch({type: CLEAR_PODS});
       }
     }),
     []

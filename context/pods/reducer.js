@@ -9,7 +9,9 @@ import {
   CHOOSE_FOLDER_FILE,
   DELETE_FOLDER,
   DELETE_FILE,
-  CHANGE_STATUS,
+  PENDING_PODS,
+  ERROR_PODS,
+  CLEAR_PODS,
 } from "./actions";
 
 export const PodsReduser = (state, action) => {
@@ -73,11 +75,21 @@ export const PodsReduser = (state, action) => {
         ...state,
         currentListFiles: [...state.currentListFiles, action.data],
       };
-    case CHANGE_STATUS:
-      return {
-        ...state,
-        statusUpdateItem: action.data
-      }  
+      case PENDING_PODS:
+        return {
+          ...state,
+          statusModalPods: {isVisible: true, message: action.message, isError: false}
+        };
+      case ERROR_PODS:
+        return {
+          ...state,
+          statusModalPods: {isVisible: true, message: action.message, isError: true}
+        };
+      case CLEAR_PODS:
+        return {
+          ...state,
+          statusModalPods: {isVisible: false, message: '', isError: false}
+        }  ;           
     default:
       return state;
   }

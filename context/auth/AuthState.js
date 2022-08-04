@@ -18,6 +18,18 @@ import {
 } from "@fairdatasociety/fdp-contracts";
 import * as SecureStore from "expo-secure-store";
 
+export const fdp = new FdpStorage(
+  "https://bee-test.bzzwiki.xyz/",
+  "https://bee-debug-test.bzzwiki.xyz/",
+  {
+    ensOptions: {
+      ...getEnvironmentConfig(Environments.LOCALHOST),
+      rpcUrl: "https://chain-test.bzzwiki.xyz/",
+      performChecks: true,
+    },
+  }
+);
+
 export const AuthState = (props) => {
   const initialState = {
     isLoading: true,
@@ -27,19 +39,7 @@ export const AuthState = (props) => {
     userBalance: 0,
     statusModalAuth: {isVisible: false, message: '', isError: false},
   };
-
-  const fdp = new FdpStorage(
-    "https://bee-test.bzzwiki.xyz/",
-    "https://bee-debug-test.bzzwiki.xyz/",
-    {
-      ensOptions: {
-        ...getEnvironmentConfig(Environments.LOCALHOST),
-        rpcUrl: "https://chain-test.bzzwiki.xyz/",
-        performChecks: true,
-      },
-    }
-  );
-
+  
   const [state, dispatch] = useReducer(AuthReduser, initialState);
 
   const authContext = useMemo(

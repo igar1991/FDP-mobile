@@ -1,6 +1,5 @@
 export const GET_LIST_PODS = 'GET_LIST_PODS';
 export const GET_LIST_FILES = 'GET_LIST_FILES';
-export const IN_POD = 'IN_POD';
 export const CHOOSE_POD = 'CHOOSE_POD';
 export const DELETE_POD = 'DELETE_POD';
 export const CREATE_POD = 'CREATE_POD';
@@ -10,5 +9,7 @@ export const ADD_IN_DIRECTORY = 'ADD_IN_DIRECTORY';
 export const CHOOSE_FOLDER_FILE = 'CHOOSE_FOLDER_FILE';
 export const DELETE_FOLDER = 'DELETE_FOLDER';
 export const DELETE_FILE = 'DELETE_FILE';
-export const CHANGE_STATUS = 'CHANGE_STATUS';
 export const DOWNLOAD_FILE = 'DOWNLOAD_FILE';
+export const PENDING_PODS = 'PENDING_PODS';
+export const ERROR_PODS = 'ERROR_PODS';
+export const CLEAR_PODS = 'CLEAR_PODS';
