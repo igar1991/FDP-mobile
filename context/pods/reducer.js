@@ -38,7 +38,7 @@ export const PodsReduser = (state, action) => {
         activFolderFile: action.data,
       };
     case DELETE_POD:
-      const listPods = state.podsList.filter((el) => el.id !== action.pod.id);
+      const listPods = state.podsList.filter((el) => el.index !== action.pod.index);
       return {
         ...state,
         podsList: listPods,

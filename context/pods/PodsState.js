@@ -55,8 +55,14 @@ export const PodsState = (props) => {
         dispatch({type: CHOOSE_FOLDER_FILE, data: item})
       },
       deletePod: async (pod)=>{
-        // const res = await fdp.personalStorage.delete('my-new-pod')
-        dispatch({type: DELETE_POD, pod})
+        try {
+          dispatch({type: PENDING_PODS, message: 'Delete pod...'});
+          await fdp.personalStorage.delete(pod.name);
+          dispatch({type: DELETE_POD, pod})
+          dispatch({type: CLEAR_PODS});
+        }catch(err) {
+          dispatch({type: ERROR_PODS, message: `Error! ${err.message}`});
+        }
       },
       createPod: async (name)=>{
         try {
