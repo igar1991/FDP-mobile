@@ -7,7 +7,8 @@ import {
   Text,
   View,
   TextInput,
-  ActivityIndicator
+  ActivityIndicator,
+  Dimensions
 } from "react-native";
 import { PodsContext } from "../context/pods/context";
 import { RenderDirectory } from "../components/renderDirectory";
@@ -22,6 +23,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as FileSystem from 'expo-file-system';
 
+const screen = Dimensions.get('screen');
+
 export const CurrentDirectoryScreen = ({ navigation }) => {
   const {
     currentListFiles,
@@ -33,20 +36,30 @@ export const CurrentDirectoryScreen = ({ navigation }) => {
     deleteFile,
     statusUpdateItem,
     uploadFile,
-    openFile
+    openFile,
+    statusModalPods,
+    clearModal
   } = useContext(PodsContext);
 
   const [modalVisible, setModalVisible] = useState(false);
   const [modaLittlelVisible, setModalLittleVisible] = useState(false);
   const [folderName, setFolderName] = useState("");
   const [modalMenu, setModalMenu] = useState(false);
+  const [currentDir, setCurrentDir] = useState("");
 
   useEffect(() => {
+    const dir = getDirectory();
+    setCurrentDir(dir);
     navigation.setOptions({
-      title: activePod ? activePod.title : "",
+      title: activePod ? activePod.name : "",
     });
-    getDerectoryList(activePod?.title, getDirectory());
-  }, [activePod]);
+    if (typeof currentListFiles[dir] === "undefined") {
+      getDerectoryList(activePod?.name, dir);
+      }
+    console.log(Object.keys(currentListFiles))  
+    
+    console.log(dir, "use EFFECT")
+  }, []);
 
   const buttonClickedHandler = (ismodal) => {
     setModalVisible(ismodal);
@@ -68,7 +81,7 @@ export const CurrentDirectoryScreen = ({ navigation }) => {
 
   const deleteCurrentFolderFile = (pod, item) => {
     const currentDirectory = getDirectory();
-    if (item.type === "folder") {
+    if (!item.reference) {
       deleteFolder(pod, currentDirectory, item);
     } else {
       deleteFile(pod, currentDirectory, item);
@@ -77,11 +90,12 @@ export const CurrentDirectoryScreen = ({ navigation }) => {
   };
 
   const openFolderFile = async (pod, item) => {
+  console.log(item)
     const currentDirectory = getDirectory();
-    if(item.type === "folder") {
-      navigation.push("Directory");
+    if(!item.reference) {
+      navigation.push("Directory", { dir: item.name});
     } else {
-      openFile(pod, currentDirectory,item.title)
+      openFile(pod, currentDirectory,item.name)
     }
     setModalMenu(false);
 
@@ -95,13 +109,20 @@ export const CurrentDirectoryScreen = ({ navigation }) => {
         root.push(element.params.dir);
       }
     });
-    return root.length === 0 ? "/" : root.join("/");
+    return root.length === 0 ? "/" : "/"+root.join("/");
+  };
+
+  const modalStatus = () => {
+    if (statusModalPods.isError) {
+      clearModal();
+    }
   };
 
   const uploadCurrentFile = useCallback(async (pod) => {
     try {
       const currentDirectory = getDirectory();
       const response = await DocumentPicker.getDocumentAsync();
+      console.log(response)
       const resBase64 = await FileSystem.readAsStringAsync(response.uri, {encoding: FileSystem.EncodingType.Base64});
         // const cUti = await FileSystem.getContentUriAsync(response)
         // console.log(cUti)
@@ -110,7 +131,7 @@ export const CurrentDirectoryScreen = ({ navigation }) => {
         //   flags: 1,
         // })
         setModalVisible(false);
-        uploadFile(pod, currentDirectory, resBase64);
+        uploadFile(pod, currentDirectory, resBase64, response.name );
     } catch (err) {
       console.log(err);
     }
@@ -118,10 +139,10 @@ export const CurrentDirectoryScreen = ({ navigation }) => {
 
   return (
     <>
-      {currentListFiles.length !== 0 ? (
+      {currentListFiles[currentDir]?.length !== 0 ? (
         <SafeAreaView style={styles.container}>
           <FlatList
-            data={currentListFiles}
+            data={currentListFiles[currentDir]}
             renderItem={({ item }) => (
               <RenderDirectory
                 navigation={navigation}
@@ -129,7 +150,7 @@ export const CurrentDirectoryScreen = ({ navigation }) => {
                 buttonClickedHandler={buttonClickedHandlerMenu}
               />
             )}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item) => item.name+activePod+activFolderFile}
           />
         </SafeAreaView>
       ) : (
@@ -197,6 +218,23 @@ export const CurrentDirectoryScreen = ({ navigation }) => {
           <MaterialIcons name="delete-outline" size={30} color="#ad535f" />
         </IconButton>
       </ModalWrapper>
+      <ModalLittleWrapper
+        modalVisible={statusModalPods.isVisible}
+        buttonClickedHandler={modalStatus}
+      >
+    <Text
+          style={{
+            fontSize: 20,
+            color: statusModalPods.isError ? "red" : "black",
+            margin: 3,
+          }}
+        >
+          {statusModalPods.message}
+        </Text>
+        {!statusModalPods.isError && (
+          <ActivityIndicator size="large" color="#6945f8" />
+        )}
+      </ModalLittleWrapper>
     </>
   );
 };
@@ -230,7 +268,7 @@ const styles = StyleSheet.create({
   hairline: {
     backgroundColor: "#000",
     height: 1,
-    width: "100%",
+    width: screen.width*0.7,
     marginTop: 10,
   },
   containerCleen: {

@@ -24,17 +24,13 @@ export const PodsReduser = (state, action) => {
     case GET_LIST_FILES:
       return {
         ...state,
-        currentListFiles: action.data,
-      };
-    case IN_POD:
-      return {
-        ...state,
-        currentListFiles: action.data,
+        currentListFiles: { ...state.currentListFiles, [action.directory]: action.data },
       };
     case CHOOSE_POD:
       return {
         ...state,
         activePod: action.pod,
+        currentListFiles: {}
       };
     case CHOOSE_FOLDER_FILE:
       return {
@@ -73,7 +69,7 @@ export const PodsReduser = (state, action) => {
     case ADD_IN_DIRECTORY:
       return {
         ...state,
-        currentListFiles: [...state.currentListFiles, action.data],
+        currentListFiles: {...state.currentListFiles, [action.directory]: [...state.currentListFiles[action.directory],action.data]},
       };
       case PENDING_PODS:
         return {

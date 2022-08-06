@@ -6,14 +6,14 @@ import { PodsContext } from "../context/pods/context";
 
 export const RenderDirectory = ({ item, navigation, buttonClickedHandler }) => {
 
-  const { inPod, chooseFolderFile } = useContext(PodsContext);
+  const { chooseFolderFile } = useContext(PodsContext);
 
   const goToDirectory = () => {
-    if(item.type === "folder") {
-      navigation.push("Directory", { dir: item.title });
+    if(!item.reference) {
+      navigation.push("Directory", { dir: item.name});
     } else {
-      openMenu();
-    }
+       openMenu();
+     }
   };
 
   const openMenu =()=>{
@@ -24,8 +24,8 @@ export const RenderDirectory = ({ item, navigation, buttonClickedHandler }) => {
   return (
     <TouchableOpacity onPress={goToDirectory} style={styles.item} onLongPress={openMenu}>
       <View style={styles.container}>
-        {item.type === "folder" ? <Entypo name="folder" size={24} color="#FF9A22" /> : <FontAwesome name="file" size={24} color="#6945f8" />}
-        <Text style={styles.title}>{item.title}</Text>
+        {!item.reference ? <Entypo name="folder" size={24} color="#FF9A22" /> : <FontAwesome name="file" size={24} color="#6945f8" />}
+        <Text style={styles.title}>{item?.name ?? item.fileName}</Text>
       </View>
       <TouchableOpacity onPress={openMenu}>
         <Entypo name="dots-three-vertical" size={24} color="gray" />

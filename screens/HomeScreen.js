@@ -30,7 +30,6 @@ export function HomeScreen({ navigation }) {
     activePod,
     deletePod,
     createPod,
-    statusUpdateItem,
     statusModalPods,
     clearModal
   } = useContext(PodsContext);
@@ -91,9 +90,6 @@ export function HomeScreen({ navigation }) {
       )}
       {podsList.length === 0 && (
         <View style={styles.containerCleen}>
-          {statusUpdateItem === "pending" ? (
-            <ActivityIndicator size="large" color="#6945f8" />
-          ) : (
             <>
               <MaterialCommunityIcons
                 name="harddisk-remove"
@@ -107,7 +103,6 @@ export function HomeScreen({ navigation }) {
                 Please create a pod for uploading files.
               </Text>
             </>
-          )}
         </View>
       )}
       <CircleButton buttonClickedHandler={buttonClickedHandlerLittle} />
