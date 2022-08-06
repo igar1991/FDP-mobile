@@ -120,8 +120,9 @@ export const PodsState = (props) => {
         const directory = dir === "/" ? "" : dir;
         try{
           console.log(pod.name, `${directory}/${name}`)
-          //dispatch({ type: PENDING_PODS, message: 'Download file...' });
-          //const data = await fdp.file.downloadData(pod.name, `${directory}/${name}`)
+          dispatch({ type: PENDING_PODS, message: 'Download file...' });
+          const data = await fdp.file.downloadData(pod.name, `${directory}/${name}`)
+          console.log(data.text())
         // const uri = FileSystem.documentDirectory + file;
         // const resBase64 = await FileSystem.readAsStringAsync(data, {encoding: FileSystem.EncodingType.Base64});
         // await FileSystem.writeAsStringAsync(uri, resBase64, { encoding: FileSystem.EncodingType.Base64 });
