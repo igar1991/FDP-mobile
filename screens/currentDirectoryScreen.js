@@ -56,9 +56,7 @@ export const CurrentDirectoryScreen = ({ navigation }) => {
     if (typeof currentListFiles[dir] === "undefined") {
       getDerectoryList(activePod?.name, dir);
       }
-    console.log(Object.keys(currentListFiles))  
-    
-    console.log(dir, "use EFFECT")
+    console.log("use EFFECT")
   }, []);
 
   const buttonClickedHandler = (ismodal) => {
@@ -85,6 +83,7 @@ export const CurrentDirectoryScreen = ({ navigation }) => {
       deleteFolder(pod, currentDirectory, item);
     } else {
       deleteFile(pod, currentDirectory, item);
+      console.log('delete')
     }
     setModalMenu(false);
   };

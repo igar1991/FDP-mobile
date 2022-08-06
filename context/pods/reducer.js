@@ -44,21 +44,23 @@ export const PodsReduser = (state, action) => {
         podsList: listPods,
       };
     case DELETE_FOLDER:
-      const folderList = state.currentListFiles.filter(
-        (el) => el.id !== action.data.id
+      const folderList = state.currentListFiles[action.directory].filter(
+        (el) => el.name !== action.data
       );
       return {
         ...state,
-        currentListFiles: folderList,
+        currentListFiles: { ...state.currentListFiles, [action.directory]: folderList },
         activFolderFile: null,
       };
     case DELETE_FILE:
-      const fileList = state.currentListFiles.filter(
-        (el) => el.id !== action.data.id
+      console.log(action.directory, action.data)
+      console.log(state.currentListFiles[action.directory])
+      const fileList = state.currentListFiles[action.directory].filter(
+        (el) => el.name !== action.data
       );
       return {
         ...state,
-        currentListFiles: fileList,
+        currentListFiles: { ...state.currentListFiles, [action.directory]: fileList },
         activFolderFile: null,
       };
     case CREATE_POD:

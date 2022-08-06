@@ -32,16 +32,14 @@ export const PodsState = (props) => {
           dispatch({ type: GET_LIST_PODS, data: pods });
           dispatch({type: CLEAR_PODS});
         }catch(err) {
-          console.log(err.message)
           dispatch({type: ERROR_PODS, message: `Error! ${err.message}`});
         }
       },
       getDerectoryList: async (activePod, directory) => {
+        console.log(directory);
         try {
-          console.log(directory)
           dispatch({type: PENDING_PODS, message: 'Get files...'});
-          const list = await fdp.directory.read(activePod, directory, true)
-          console.log('----------------LIST-------------------')
+          const list = await fdp.directory.read(activePod, directory);
           dispatch({ type: GET_LIST_FILES, data: list.content, directory });
           dispatch({type: CLEAR_PODS});
         } catch(err) {
@@ -49,16 +47,16 @@ export const PodsState = (props) => {
         }
       },
       choosePod: (pod)=>{
-        dispatch({type: CHOOSE_POD, pod})
+        dispatch({type: CHOOSE_POD, pod});
       },
       chooseFolderFile: (item)=>{
-        dispatch({type: CHOOSE_FOLDER_FILE, data: item})
+        dispatch({type: CHOOSE_FOLDER_FILE, data: item});
       },
       deletePod: async (pod)=>{
         try {
           dispatch({type: PENDING_PODS, message: 'Delete pod...'});
           await fdp.personalStorage.delete(pod.name);
-          dispatch({type: DELETE_POD, pod})
+          dispatch({type: DELETE_POD, pod});
           dispatch({type: CLEAR_PODS});
         }catch(err) {
           dispatch({type: ERROR_PODS, message: `Error! ${err.message}`});
@@ -68,7 +66,6 @@ export const PodsState = (props) => {
         try {
           dispatch({type: PENDING_PODS, message: 'Create pod...'});
           const pod = await fdp.personalStorage.create(name);
-          console.log(pod)
           dispatch({type: CREATE_POD, pod});
           dispatch({type: CLEAR_PODS});
         } catch(err) {
@@ -76,36 +73,48 @@ export const PodsState = (props) => {
         }
 
       },
-      createFolder: async (pod, directory, name)=>{
+      createFolder: async (pod, dir, name)=>{
+        const directory = dir === "/" ? "" : dir;
         try {
-          console.log(`${directory}${name}`)
+          console.log(`${directory}/${name}`)
           dispatch({type: PENDING_PODS, message: 'Create folder...'});
-          const res = await fdp.directory.create(pod.name, `${directory}${name}`);
-          dispatch({type: ADD_IN_DIRECTORY, data: {name, reference: undefined }, directory });
+          const res = await fdp.directory.create(pod.name, `${directory}/${name}`);
+          dispatch({type: ADD_IN_DIRECTORY, data: {name, reference: undefined }, directory: dir });
           dispatch({type: CLEAR_PODS});
         } catch(err) {
           dispatch({type: ERROR_PODS, message: `Error! ${err.message}`});
         }
       },
-      deleteFolder: async (pod, directory, item)=>{
-        //const res = await fdp.directory.delete('my-new-pod', 'my-dir')
-        dispatch({type: DELETE_FOLDER, data: item})
-        console.log("delete folder")
+      deleteFolder: async (pod, dir, item)=>{
+        console.log(item)
+        const directory = dir === "/" ? "" : dir;
+        console.log(`${directory}/${item.name}`)
+        try {
+          dispatch({type: PENDING_PODS, message: 'Delete folder...'});
+          await fdp.directory.delete(pod.name, `${directory}/${item.name}`);
+          dispatch({type: DELETE_FOLDER, data: item.name, directory: dir});
+          dispatch({type: CLEAR_PODS});
+        } catch(err) {
+          dispatch({type: ERROR_PODS, message: `Error! ${err.message}`});
+        }     
       },
-      deleteFile: async (pod, directory, item)=>{
-        //const res = await fdp.file.delete('my-new-pod', '/my-dir/myfile.txt')
-        dispatch({type: DELETE_FILE, data: item})
-        console.log("delete file")
+      deleteFile: async (pod, dir, item)=>{
+        const directory = dir === "/" ? "" : dir;
+        try {
+          dispatch({ type: PENDING_PODS, message: 'Delete file...' });
+          await fdp.file.delete(pod.name, `${directory}/${item.name}`);
+          dispatch({ type: DELETE_FILE, data: item.name, directory: dir });
+          dispatch({type: CLEAR_PODS});
+        } catch(err) {
+          dispatch({type: ERROR_PODS, message: `Error! ${err.message}`});
+        }
       },
-      uploadFile: async (pod, directory, file, name)=>{
-        console.log(directory)
+      uploadFile: async (pod, dir, file, name)=>{
+        const directory = dir === "/" ? "" : dir;
         try {
           dispatch({type: PENDING_PODS, message: 'Upload file...'});
-          const res = await fdp.file.uploadData(pod.name, `${directory}${name}`, file);
-          console.log('----------------FILE-------------------');
-          console.log(res);
-          console.log('-----------------------------------');
-          dispatch({type: ADD_IN_DIRECTORY, data: {...res, reference: true}, directory})
+          const res = await fdp.file.uploadData(pod.name, `${directory}/${name}`, file);
+          dispatch({type: ADD_IN_DIRECTORY, data: {...res, reference: true}, directory: dir});
           dispatch({type: CLEAR_PODS});
         } catch(err) {
           dispatch({type: ERROR_PODS, message: `Error! ${err.message}`});
