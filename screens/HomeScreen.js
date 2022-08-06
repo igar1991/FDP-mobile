@@ -141,6 +141,7 @@ export function HomeScreen({ navigation }) {
           placeholder="My new pod"
           value={newPodName}
           onChangeText={setNewPodName}
+          maxLength={20}
         />
         <MainButton
           title="Create"

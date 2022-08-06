@@ -1,26 +1,42 @@
 import React, { useContext, useState } from "react";
-import { View, TextInput, StyleSheet, Image, Text, TouchableOpacity, ActivityIndicator } from "react-native";
-import * as Clipboard from 'expo-clipboard';
+import {
+  View,
+  TextInput,
+  StyleSheet,
+  Image,
+  Text,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
+import * as Clipboard from "expo-clipboard";
 import { AuthContext } from "../context/auth/context";
-import { AntDesign } from '@expo/vector-icons'; 
+import { AntDesign } from "@expo/vector-icons";
 import { MainButton } from "../components/mainButton";
 import { ModalLittleWrapper } from "../components/modalLittleWrapper";
 
 export function SignUpScreen() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const { signUp, userWallet, userBalance, createWallet, getBalance, statusModalAuth, clearModal } = useContext(AuthContext);
+  const {
+    signUp,
+    userWallet,
+    userBalance,
+    createWallet,
+    getBalance,
+    statusModalAuth,
+    clearModal,
+  } = useContext(AuthContext);
 
   const copyToClipboard = async () => {
     await Clipboard.setStringAsync(userWallet);
-    };
+  };
 
-  const createCurrentWallet =()=>{
+  const createCurrentWallet = () => {
     createWallet();
   };
-  
-  const signCurrentUP=()=>{
-    signUp({ username, password })
+
+  const signCurrentUP = () => {
+    signUp({ username, password });
   };
 
   const modalStatus = () => {
@@ -43,19 +59,29 @@ export function SignUpScreen() {
             To create an account, you need to create a wallet and top up it with
             0.1 xDai.
           </Text>
-          <MainButton title="Create Wallet" backgroundColor={{backgroundColor:"#FF9A22"}} onPress={createCurrentWallet}/>
+          <MainButton
+            title="Create Wallet"
+            backgroundColor={{ backgroundColor: "#FF9A22" }}
+            onPress={createCurrentWallet}
+          />
         </View>
       )}
-            {userWallet && userBalance < 0.1 && (
+      {userWallet && userBalance < 0.1 && (
         <View style={styles.containerText}>
           <Text style={styles.text}>
-            To create an account, you need top up wallet with
-            0.1 xDai.
+            To create an account, you need top up wallet with 0.1 xDai.
           </Text>
           <TouchableOpacity onPress={() => copyToClipboard()}>
-          <Text style={styles.text}>{userWallet}<AntDesign name="copy1" size={16} color="black" /></Text>
+            <Text style={styles.text}>
+              {userWallet}
+              <AntDesign name="copy1" size={16} color="black" />
+            </Text>
           </TouchableOpacity>
-          <MainButton title="Update balance" backgroundColor={{backgroundColor:"#20B954"}} onPress={() => getBalance(userWallet)}/>
+          <MainButton
+            title="Update balance"
+            backgroundColor={{ backgroundColor: "#20B954" }}
+            onPress={() => getBalance(userWallet)}
+          />
         </View>
       )}
       {userWallet && userBalance >= 0.1 && (
@@ -67,6 +93,7 @@ export function SignUpScreen() {
               value={username}
               onChangeText={setUsername}
               autoCapitalize="none"
+              maxLength={20}
             />
             <TextInput
               style={styles.input}
@@ -74,18 +101,23 @@ export function SignUpScreen() {
               value={password}
               onChangeText={setPassword}
               secureTextEntry
+              maxLength={20}
             />
           </View>
           <View style={styles.containerButtons}>
-            <MainButton title="Sign Up" backgroundColor={{backgroundColor:"#FF9A22"}} onPress={signCurrentUP}/>
+            <MainButton
+              title="Sign Up"
+              backgroundColor={{ backgroundColor: "#FF9A22" }}
+              onPress={signCurrentUP}
+            />
           </View>
         </>
       )}
-            <ModalLittleWrapper
+      <ModalLittleWrapper
         modalVisible={statusModalAuth.isVisible}
         buttonClickedHandler={modalStatus}
       >
-    <Text
+        <Text
           style={{
             fontSize: 20,
             color: statusModalAuth.isError ? "red" : "black",
@@ -106,7 +138,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    backgroundColor: "white"
+    backgroundColor: "white",
   },
   containerInput: {
     flex: 0.3,

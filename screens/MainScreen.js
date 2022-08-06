@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -37,6 +37,7 @@ export function MainScreen({ navigation }) {
           value={username}
           onChangeText={setUsername}
           autoCapitalize="none"
+          maxLength={20}
         />
         <TextInput
           style={styles.input}
@@ -44,6 +45,7 @@ export function MainScreen({ navigation }) {
           value={password}
           onChangeText={setPassword}
           secureTextEntry
+          maxLength={20}
         />
       </View>
       <View style={styles.containerButtons}>

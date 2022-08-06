@@ -56,7 +56,6 @@ export const CurrentDirectoryScreen = ({ navigation }) => {
     if (typeof currentListFiles[dir] === "undefined") {
       getDerectoryList(activePod?.name, dir);
       }
-    console.log("use EFFECT")
   }, []);
 
   const buttonClickedHandler = (ismodal) => {
@@ -83,13 +82,11 @@ export const CurrentDirectoryScreen = ({ navigation }) => {
       deleteFolder(pod, currentDirectory, item);
     } else {
       deleteFile(pod, currentDirectory, item);
-      console.log('delete')
     }
     setModalMenu(false);
   };
 
   const openFolderFile = async (pod, item) => {
-  console.log(item)
     const currentDirectory = getDirectory();
     if(!item.reference) {
       navigation.push("Directory", { dir: item.name});
@@ -193,6 +190,7 @@ export const CurrentDirectoryScreen = ({ navigation }) => {
           placeholder="My new folder"
           value={folderName}
           onChangeText={setFolderName}
+          maxLength={15}
         />
         <MainButton
           title="Create"

@@ -36,7 +36,6 @@ export const PodsState = (props) => {
         }
       },
       getDerectoryList: async (activePod, directory) => {
-        console.log(directory);
         try {
           dispatch({type: PENDING_PODS, message: 'Get files...'});
           const list = await fdp.directory.read(activePod, directory);
@@ -76,7 +75,6 @@ export const PodsState = (props) => {
       createFolder: async (pod, dir, name)=>{
         const directory = dir === "/" ? "" : dir;
         try {
-          console.log(`${directory}/${name}`)
           dispatch({type: PENDING_PODS, message: 'Create folder...'});
           const res = await fdp.directory.create(pod.name, `${directory}/${name}`);
           dispatch({type: ADD_IN_DIRECTORY, data: {name, reference: undefined }, directory: dir });
@@ -86,9 +84,7 @@ export const PodsState = (props) => {
         }
       },
       deleteFolder: async (pod, dir, item)=>{
-        console.log(item)
         const directory = dir === "/" ? "" : dir;
-        console.log(`${directory}/${item.name}`)
         try {
           dispatch({type: PENDING_PODS, message: 'Delete folder...'});
           await fdp.directory.delete(pod.name, `${directory}/${item.name}`);
@@ -120,13 +116,21 @@ export const PodsState = (props) => {
           dispatch({type: ERROR_PODS, message: `Error! ${err.message}`});
         }
       },
-      openFile: async(pod,directory, file)=>{
-        //const data = await fdp.file.downloadData('my-new-pod', '/myfile.txt')
-        //const uri = FileSystem.documentDirectory + file;
-        //const resBase64 = await FileSystem.readAsStringAsync(data, {encoding: FileSystem.EncodingType.Base64});
-        //await FileSystem.writeAsStringAsync(uri, resBase64, { encoding: FileSystem.EncodingType.Base64 });
-        //await shareAsync(file);
-        console.log(pod,directory, file);
+      openFile: async(pod, dir, name)=>{
+        const directory = dir === "/" ? "" : dir;
+        try{
+          console.log(pod.name, `${directory}/${name}`)
+          //dispatch({ type: PENDING_PODS, message: 'Download file...' });
+          //const data = await fdp.file.downloadData(pod.name, `${directory}/${name}`)
+        // const uri = FileSystem.documentDirectory + file;
+        // const resBase64 = await FileSystem.readAsStringAsync(data, {encoding: FileSystem.EncodingType.Base64});
+        // await FileSystem.writeAsStringAsync(uri, resBase64, { encoding: FileSystem.EncodingType.Base64 });
+        // await shareAsync(file);
+        dispatch({type: CLEAR_PODS});
+        } catch(err) {
+          dispatch({type: ERROR_PODS, message: `Error! ${err.message}`});
+        }
+
       },
       clearModal: ()=>{
         dispatch({type: CLEAR_PODS});
