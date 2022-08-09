@@ -21,9 +21,12 @@ export const RenderDirectory = ({ item, navigation, buttonClickedHandler }) => {
   };
 
   const shortNameFile = (name) => {
-    if (name.length < 20) return name;
-    const arr = name.split("");
-    return `${arr.slice(0, 8).join("")}...${arr.slice(-8).join("")}`;
+    if(name) {
+      if (name.length < 20) return name;
+      const arr = name.split("");
+      return `${arr.slice(0, 8).join("")}...${arr.slice(-8).join("")}`;
+    }
+    return name;
   };
 
   return (
@@ -38,7 +41,7 @@ export const RenderDirectory = ({ item, navigation, buttonClickedHandler }) => {
         ) : (
           <FontAwesome name="file" size={24} color="#6945f8" />
         )}
-        <Text style={styles.title}>{shortNameFile(item.name)}</Text>
+        <Text style={styles.title}>{shortNameFile(item.name ?? item.fileName)}</Text>
       </View>
       <TouchableOpacity onPress={openMenu}>
         <Entypo name="dots-three-vertical" size={24} color="gray" />

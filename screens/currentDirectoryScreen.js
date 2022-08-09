@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState, useCallback } from "react";
+import React, { useContext, useEffect, useState, useCallback, useReducer } from "react";
 import {
   FlatList,
   SafeAreaView,
@@ -8,7 +8,8 @@ import {
   View,
   TextInput,
   ActivityIndicator,
-  Dimensions
+  Dimensions,
+  Platform
 } from "react-native";
 import { PodsContext } from "../context/pods/context";
 import { RenderDirectory } from "../components/renderDirectory";
@@ -22,6 +23,8 @@ import * as DocumentPicker from "expo-document-picker";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as FileSystem from 'expo-file-system';
+import { PodsReduser } from "../context/pods/reducer";
+import { PENDING_PODS } from "../context/pods/actions";
 
 const screen = Dimensions.get('screen');
 
@@ -40,6 +43,8 @@ export const CurrentDirectoryScreen = ({ navigation }) => {
     statusModalPods,
     clearModal
   } = useContext(PodsContext);
+
+  const [state, dispatch] = useReducer(PodsReduser)
 
   const [modalVisible, setModalVisible] = useState(false);
   const [modaLittlelVisible, setModalLittleVisible] = useState(false);
@@ -117,17 +122,26 @@ export const CurrentDirectoryScreen = ({ navigation }) => {
   const uploadCurrentFile = useCallback(async (pod) => {
     try {
       const currentDirectory = getDirectory();
-      const response = await DocumentPicker.getDocumentAsync();
-      console.log(response)
-      const resBase64 = await FileSystem.readAsStringAsync(response.uri, {encoding: FileSystem.EncodingType.Base64});
-        // const cUti = await FileSystem.getContentUriAsync(response)
+      const response = await DocumentPicker.getDocumentAsync({copyToCacheDirectory: false});
+      setModalVisible(false);
+      if(Platform.OS === "ios") {
+        console.log("ios")
+        const resBase64 = await FileSystem.readAsStringAsync(response.uri, {encoding: FileSystem.EncodingType.Base64});
+        uploadFile(pod, currentDirectory, resBase64, response.name );
+      } else {
+        const fileUri = `${FileSystem.documentDirectory}${response.name}`;
+        await FileSystem.copyAsync({from: response.uri, to: fileUri});
+        const resBase64 = await FileSystem.readAsStringAsync(fileUri, {encoding: FileSystem.EncodingType.Base64});
+        uploadFile(pod, currentDirectory, resBase64, response.name );
+      }
+        //const cUti = await FileSystem.getContentUriAsync(response)
         // console.log(cUti)
         // const res = startActivityAsync('android.intent.action.VIEW', {
         //   data: cUti,
         //   flags: 1,
         // })
-        setModalVisible(false);
-        uploadFile(pod, currentDirectory, resBase64, response.name );
+        //setModalVisible(false);
+        //uploadFile(pod, currentDirectory, resBase64, response.name );
     } catch (err) {
       console.log(err);
     }

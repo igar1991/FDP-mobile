@@ -110,6 +110,7 @@ export const PodsState = (props) => {
         try {
           dispatch({type: PENDING_PODS, message: 'Upload file...'});
           const res = await fdp.file.uploadData(pod.name, `${directory}/${name}`, file);
+          console.log(res)
           dispatch({type: ADD_IN_DIRECTORY, data: {...res, reference: true}, directory: dir});
           dispatch({type: CLEAR_PODS});
         } catch(err) {

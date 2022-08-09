@@ -89,6 +89,7 @@ export const PodsReduser = (state, action) => {
         },
       };
     case PENDING_PODS:
+      console.log('PENDENG')
       return {
         ...state,
         statusModalPods: {
