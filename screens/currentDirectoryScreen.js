@@ -24,7 +24,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import * as FileSystem from 'expo-file-system';
 import { PodsReduser } from "../context/pods/reducer";
-import { PENDING_PODS } from "../context/pods/actions";
+import * as Sharing from 'expo-sharing';
 
 const screen = Dimensions.get('screen');
 
@@ -125,9 +125,8 @@ export const CurrentDirectoryScreen = ({ navigation }) => {
       const response = await DocumentPicker.getDocumentAsync({copyToCacheDirectory: false});
       setModalVisible(false);
       if(Platform.OS === "ios") {
-        console.log("ios")
-        const resBase64 = await FileSystem.readAsStringAsync(response.uri, {encoding: FileSystem.EncodingType.Base64});
-        uploadFile(pod, currentDirectory, resBase64, response.name );
+       const resBase64 = await FileSystem.readAsStringAsync(response.uri, {encoding: FileSystem.EncodingType.Base64});
+       uploadFile(pod, currentDirectory, resBase64, response.name );
       } else {
         const fileUri = `${FileSystem.documentDirectory}${response.name}`;
         await FileSystem.copyAsync({from: response.uri, to: fileUri});
@@ -141,7 +140,6 @@ export const CurrentDirectoryScreen = ({ navigation }) => {
         //   flags: 1,
         // })
         //setModalVisible(false);
-        //uploadFile(pod, currentDirectory, resBase64, response.name );
     } catch (err) {
       console.log(err);
     }

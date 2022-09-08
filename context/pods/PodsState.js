@@ -124,12 +124,13 @@ export const PodsState = (props) => {
           dispatch({ type: PENDING_PODS, message: 'Download file...' });
           const data = await fdp.file.downloadData(pod.name, `${directory}/${name}`)
           console.log(data.text())
-        // const uri = FileSystem.documentDirectory + file;
+        // const uri = FileSystem.documentDirectory + name;
         // const resBase64 = await FileSystem.readAsStringAsync(data, {encoding: FileSystem.EncodingType.Base64});
         // await FileSystem.writeAsStringAsync(uri, resBase64, { encoding: FileSystem.EncodingType.Base64 });
-        // await shareAsync(file);
+        // await shareAsync(uri);
         dispatch({type: CLEAR_PODS});
         } catch(err) {
+          console.log(err);
           dispatch({type: ERROR_PODS, message: `Error! ${err.message}`});
         }
 
