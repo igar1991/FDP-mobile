@@ -22,7 +22,7 @@ For build your application you can use this link : https://docs.expo.dev/build/s
 The application is based on fdp-play, which is running on an https-enabled server. For testing, you need to deploy your own fdp-play with https and write it in the application configuration.
 
 ### For test
-- Link bee node: https://bee-test.bzzwiki.xyz/
+- Link to bee node: https://bee-test.bzzwiki.xyz/
 - Login: igorigor
 - Password: qwerty
 
