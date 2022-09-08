@@ -1,9 +1,8 @@
 # FDP Mobile
 
-- FDP Mobile - mobile client iOS and Android device that allows me to manage your personal storage files, so that you can access your personal data securely on the go.
+- FDP Mobile - mobile client for iOS and Android devices that allows to manage personal storage files, so that you can access your personal data securely on the go.
 - FDP Mobile use  https://github.com/fairDataSociety/fdp-storage
-- FDP Mobile was created on https://docs.expo.dev/
-- Expo is a framework for rapidly changing native React applications.
+- FDP Mobile was created with https://docs.expo.dev/
 
 - Build for Android: https://expo.dev/artifacts/eas/s8rrL4MGUmWhYYCjtDAG36.aab
 - Video demo: https://youtu.be/vl7UkoUlWxw
@@ -11,15 +10,16 @@
 # Run locally
 Clone this repo and run.
 1. `npm install`
-2. `expo start`
-3. To open the app:
+2. `npm install --global expo-cli`
+3. `expo start`
+4. To open the app:
 On your iPhone or iPad, open the default Apple "Camera" app and scan the QR code you see in the terminal.
 On your Android device, press "Scan QR Code" on the "Home" tab of the Expo Go app and scan the QR code you see in the terminal.
 For build your application you can use this link : https://docs.expo.dev/build/setup/
 
 # Important
 
-The application is based on fdp-play, which is running on an https-enabled server. For testing, you need to deploy your own fdp-play with https and write it in the application description.
+The application is based on fdp-play, which is running on an https-enabled server. For testing, you need to deploy your own fdp-play with https and write it in the application configuration.
 
 ### For test
 - Link bee node: https://bee-test.bzzwiki.xyz/
