@@ -55,7 +55,6 @@ export function HomeScreen({ navigation }) {
   };
 
   const deleteCurrentPod = (pod) => {
-    console.log(pod);
     deletePod(pod);
     setModalVisible(false);
     

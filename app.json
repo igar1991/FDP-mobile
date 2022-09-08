@@ -19,16 +19,23 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "usesIcloudStorage": true
+      "usesIcloudStorage": true,
+      "bundleIdentifier": "com.igar1991.swarmmobile"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.igar1991.swarmmobile"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "80fe4e10-7c77-441a-a76c-944c4365d3f2"
+      }
     }
   }
 }

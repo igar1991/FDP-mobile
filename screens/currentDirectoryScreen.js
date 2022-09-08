@@ -134,7 +134,6 @@ export const CurrentDirectoryScreen = ({ navigation }) => {
         uploadFile(pod, currentDirectory, resBase64, response.name );
       }
         //const cUti = await FileSystem.getContentUriAsync(response)
-        // console.log(cUti)
         // const res = startActivityAsync('android.intent.action.VIEW', {
         //   data: cUti,
         //   flags: 1,

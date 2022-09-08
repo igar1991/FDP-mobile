@@ -110,7 +110,6 @@ export const PodsState = (props) => {
         try {
           dispatch({type: PENDING_PODS, message: 'Upload file...'});
           const res = await fdp.file.uploadData(pod.name, `${directory}/${name}`, file);
-          console.log(res)
           dispatch({type: ADD_IN_DIRECTORY, data: {...res, reference: true}, directory: dir});
           dispatch({type: CLEAR_PODS});
         } catch(err) {
@@ -120,17 +119,14 @@ export const PodsState = (props) => {
       openFile: async(pod, dir, name)=>{
         const directory = dir === "/" ? "" : dir;
         try{
-          console.log(pod.name, `${directory}/${name}`)
           dispatch({ type: PENDING_PODS, message: 'Download file...' });
           const data = await fdp.file.downloadData(pod.name, `${directory}/${name}`)
-          console.log(data.text())
         // const uri = FileSystem.documentDirectory + name;
         // const resBase64 = await FileSystem.readAsStringAsync(data, {encoding: FileSystem.EncodingType.Base64});
         // await FileSystem.writeAsStringAsync(uri, resBase64, { encoding: FileSystem.EncodingType.Base64 });
         // await shareAsync(uri);
         dispatch({type: CLEAR_PODS});
         } catch(err) {
-          console.log(err);
           dispatch({type: ERROR_PODS, message: `Error! ${err.message}`});
         }
 

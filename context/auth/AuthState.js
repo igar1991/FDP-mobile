@@ -47,13 +47,10 @@ export const AuthState = (props) => {
       signIn: async ({ username, password }) => {
         try {
           dispatch({type: PENDING_AUTH, message: 'Sign In...'})
-          console.log(username, password);
           const wallet = await fdp.account.login(username, password);
-          console.log(wallet);
           dispatch({ type: SIGN_IN, wallet: wallet.address});
           dispatch({type: CLEAR_AUTH})
         }catch(err) {
-          console.log(err.message)
           dispatch({type: ERROR_AUTH, message: `Error! ${err.message}`})
         }
       },
@@ -63,15 +60,12 @@ export const AuthState = (props) => {
       signUp: async ({ username, password }) => {
         try {
           dispatch({type: PENDING_AUTH, message: 'Sign Up...'})
-          console.log(username, password)
           const userMnemonic = await SecureStore.getItemAsync("mnemonic");
-          console.log(userMnemonic, 'USER MNEMONIC');
           fdp.account.setAccountFromMnemonic(userMnemonic);
           await fdp.account.register(username, password);
           dispatch({type: PENDING_AUTH, message: 'Sign In...'});
           const wallet = await fdp.account.login(username, password);
           dispatch({ type: SIGN_IN, wallet: wallet.address});
-          console.log(wallet, "CREATE WALLET");
           dispatch({type: CLEAR_AUTH});
         } catch (err) {
           dispatch({type: ERROR_AUTH, message: `Error! ${err.message}`});
@@ -82,13 +76,11 @@ export const AuthState = (props) => {
           dispatch({type: PENDING_AUTH, message: 'Create wallet...'});
           const wallet = await fdp.account.createWallet();
           dispatch({ type: CREATE_WALLET, wallet: wallet.address });
-          console.log(wallet.mnemonic.phrase, "mnemonic");
           await SecureStore.setItemAsync("userWallet", wallet.address);
           await SecureStore.setItemAsync("mnemonic", wallet.mnemonic.phrase);
           dispatch({type: PENDING_AUTH, message: 'Check balance...'});
           const balance = await fdp.ens.provider.getBalance(wallet.address);
           dispatch({ type: GET_BALANCE, balance: Number(balance) });
-          console.log(wallet.address, Number(balance), "createWallet");
           dispatch({type: CLEAR_AUTH});
         } catch (err) {
           dispatch({type: ERROR_AUTH, message: `Error! ${err.message}`})
@@ -98,7 +90,6 @@ export const AuthState = (props) => {
         try {
           dispatch({type: PENDING_AUTH, message: 'Check balance...'});
           const balance = await fdp.ens.provider.getBalance(wallet);
-          console.log(Number(balance), "getBalance");
           dispatch({ type: GET_BALANCE, balance: Number(balance) });
           dispatch({type: CLEAR_AUTH});
         }catch(err){

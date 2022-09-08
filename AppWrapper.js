@@ -22,7 +22,6 @@ export function AppWrapper({ navigation }) {
       if (userAddress) {
         updateWallet(userAddress);
         getBalance(userAddress);
-        console.log(userAddress);
       }
     };
     bootstrapAsync();
