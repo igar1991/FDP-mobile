@@ -31,3 +31,5 @@ The application is based on fdp-play, which is running on an https-enabled serve
 https://github.com/fairDataSociety/fdp-storage/issues/110#issuecomment-1211908461
 https://github.com/ethersphere/bee-js/issues/757
 - I undertake to fix this bug in bee-js to bring the application to a fully working state.
+
+  Donation: 0xaCF624879e693264E587Dee5451eC642A4545523
